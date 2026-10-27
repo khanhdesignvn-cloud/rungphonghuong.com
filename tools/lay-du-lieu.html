@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lấy dữ liệu sa bàn Khe Sanh</title>
+<style>
+body{margin:0;background:#0A2622;color:#FBF4E3;font:15px/1.55 system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:28px 16px}
+h1{font-size:26px;margin:0 0 6px;color:#F6E7C9}
+p{color:rgba(251,244,227,.8)}
+button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:12px 20px;cursor:pointer;background:#C44125;color:#fff;margin:6px 6px 0 0}
+button.s{background:#F6E7C9;color:#15584F}
+button:disabled{opacity:.4;cursor:default}
+pre{background:#061714;border-radius:14px;padding:14px;white-space:pre-wrap;font:12.5px/1.5 ui-monospace,monospace;color:#EFCB8F;min-height:120px}
+canvas{max-width:100%;border-radius:12px;margin-top:12px;background:#15584F}
+</style></head><body><main>
+<h1>Lấy dữ liệu sa bàn Mùa Phong Khe Sanh</h1>
+<p>Trang này tải cao độ SRTM (AWS Terrain Tiles, zoom 13) và bờ hồ, đường QL9, đường HCM từ OpenStreetMap cho vùng 106.565–106.805°Đ, 16.580–16.745°B, rồi xuất 2 file <b>dem.json</b> và <b>geo.json</b>. Mở bằng Chrome trên máy tính có mạng, bấm “Bắt đầu”, đợi xong rồi tải 2 file về và gửi lại cho Claude.</p>
+<button id="go">Bắt đầu</button><button class="s" id="dDem" disabled>Tải dem.json</button><button class="s" id="dGeo" disabled>Tải geo.json</button>
+<pre id="log"></pre>
+<canvas id="pv" width="480" height="340"></canvas>
+<script>
+const LON0=106.565,LON1=106.805,LAT0=16.580,LAT1=16.745,W=240,H=170,Z=13,LW=960,LH=680;
+const LAKE_SEEDS=[[16.6964,106.6946],[16.7090,106.6810],[16.7080,106.7300]];
+const log=s=>{document.getElementById('log').textContent+=s+'\n'};
+const tx=lon=>(lon+180)/360*2**Z, ty=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*2**Z};
+let OUT={};
+async function tile(x,y){const r=await fetch(`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${Z}/${x}/${y}.png`);if(!r.ok)throw new Error('tile '+r.status);
+  const bm=await createImageBitmap(await r.blob());const c=new OffscreenCanvas(256,256);const g=c.getContext('2d');g.drawImage(bm,0,0);return g.getImageData(0,0,256,256).data;}
+async function dem(){
+  const x0=Math.floor(tx(LON0)),x1=Math.floor(tx(LON1)),y0=Math.floor(ty(LAT1)),y1=Math.floor(ty(LAT0));
+  const tiles={};for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++){log(`tải ô ${x}/${y}`);tiles[x+'/'+y]=await tile(x,y);}
+  const e=(fx,fy)=>{const X=Math.floor(fx),Y=Math.floor(fy),t=tiles[X+'/'+Y];const px=Math.min(255,Math.floor((fx-X)*256)),py=Math.min(255,Math.floor((fy-Y)*256));const k=(py*256+px)*4;return t[k]*256+t[k+1]+t[k+2]/256-32768;};
+  const u16=new Uint16Array(W*H);let mn=1e9,mx=-1e9;
+  for(let j=0;j<H;j++){const lat=LAT1-j/(H-1)*(LAT1-LAT0);for(let i=0;i<W;i++){const lon=LON0+i/(W-1)*(LON1-LON0);
+    // trung bình 3x3 điểm con để giảm nhiễu
+    let s=0;for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)s+=e(tx(lon+a*.00035),ty(lat+b*.00035));const h=Math.max(0,Math.round(s/9));u16[j*W+i]=h;mn=Math.min(mn,h);mx=Math.max(mx,h);}}
+  const bytes=new Uint8Array(u16.buffer);let bin='';for(let k=0;k<bytes.length;k++)bin+=String.fromCharCode(bytes[k]);
+  OUT.dem={W,H,lon0:LON0,lon1:LON1,lat0:LAT0,lat1:LAT1,b64:btoa(bin),source:'SRTM via AWS Terrain Tiles z13, '+new Date().toISOString().slice(0,10)};
+  log(`cao độ: ${mn}–${mx} m`);return u16;
+}
+async function osm(){
+  const bb=`${LAT0},${LON0},${LAT1},${LON1}`;
+  const q=`[out:json][timeout:90];(way["natural"="water"](${bb});relation["natural"="water"](${bb});way["landuse"="reservoir"](${bb});relation["landuse"="reservoir"](${bb});way["water"="reservoir"](${bb});way["highway"~"^(trunk|primary|secondary|tertiary)$"](${bb}););out geom;`;
+  log('tải OpenStreetMap…');const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)});if(!r.ok)throw new Error('overpass '+r.status);return (await r.json()).elements;
+}
+const P=(lat,lon)=>[(lon-LON0)/(LON1-LON0)*LW,(LAT1-lat)/(LAT1-LAT0)*LH];
+function ringsOf(el){const out=[];if(el.type==='way'&&el.geometry)out.push({role:'outer',g:el.geometry});if(el.type==='relation')for(const m of el.members||[])if(m.geometry)out.push({role:m.role||'outer',g:m.geometry});return out;}
+function bboxHit(rs){for(const [la,lo] of LAKE_SEEDS){for(const r of rs){if(r.role!=='outer')continue;let a=1e9,b=-1e9,c=1e9,d=-1e9;for(const p of r.g){a=Math.min(a,p.lat);b=Math.max(b,p.lat);c=Math.min(c,p.lon);d=Math.max(d,p.lon);}if(la>=a-.002&&la<=b+.002&&lo>=c-.002&&lo<=d+.002)return true;}}return false;}
+async function run(){
+  document.getElementById('go').disabled=true;
+  try{
+    const hm=await dem();
+    const els=await osm();
+    const water=els.filter(e=>(e.tags||{}).natural==='water'||(e.tags||{}).landuse==='reservoir'||(e.tags||{}).water==='reservoir');
+    const lakes=water.filter(e=>bboxHit(ringsOf(e)));
+    log(`mặt nước OSM: ${water.length}, chọn hồ Rào Quán: ${lakes.length} (${lakes.map(e=>(e.tags.name||'không tên')).join(', ')})`);
+    const c=new OffscreenCanvas(LW,LH),g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,LW,LH);
+    g.beginPath();for(const e of lakes)for(const r of ringsOf(e)){r.g.forEach((p,k)=>{const [x,y]=P(p.lat,p.lon);k?g.lineTo(x,y):g.moveTo(x,y);});g.closePath();}
+    g.fillStyle='#fff';g.fill('evenodd');
+    const blob=await c.convertToBlob({type:'image/png'});const buf=new Uint8Array(await blob.arrayBuffer());let bin='';for(const v of buf)bin+=String.fromCharCode(v);
+    // mực nước: trung vị cao độ dưới mặt nạ
+    const md=g.getImageData(0,0,LW,LH).data;const hs=[];for(let j=0;j<H;j++)for(let i=0;i<W;i++){const x=Math.floor((i+.5)/W*LW),y=Math.floor((j+.5)/H*LH);if(md[(y*LW+x)*4]>127)hs.push(hm[j*W+i]);}
+    hs.sort((a,b)=>a-b);const level=hs.length?hs[Math.floor(hs.length*.5)]:460;
+    const roads=els.filter(e=>e.type==='way'&&(e.tags||{}).highway&&e.geometry).map(e=>({hw:e.tags.highway,ref:e.tags.ref||'',name:e.tags.name||'',pts:e.geometry.map(p=>[+p.lat.toFixed(5),+p.lon.toFixed(5)])}));
+    log(`đường: ${roads.length} đoạn (${[...new Set(roads.map(r=>r.ref||r.name).filter(Boolean))].slice(0,12).join(' · ')})`);
+    OUT.geo={source:'OpenStreetMap contributors (ODbL), '+new Date().toISOString().slice(0,10),lake:btoa(bin),lakeLevel:level,roads};
+    log(`mực nước hồ ước tính: ${level} m (trung vị SRTM dưới mặt hồ)`);
+    const pv=document.getElementById('pv').getContext('2d');pv.drawImage(await createImageBitmap(blob),0,0,480,340);
+    pv.strokeStyle='#FBF4E3';pv.lineWidth=1.5;for(const r of roads){pv.beginPath();r.pts.forEach(([la,lo],k)=>{const [x,y]=P(la,lo);k?pv.lineTo(x/2,y/2):pv.moveTo(x/2,y/2);});pv.stroke();}
+    document.getElementById('dDem').disabled=document.getElementById('dGeo').disabled=false;log('XONG. Tải 2 file và gửi lại.');
+  }catch(e){log('LỖI: '+e.message);document.getElementById('go').disabled=false;}
+}
+function save(name,obj){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj)],{type:'application/json'}));a.download=name;a.click();}
+document.getElementById('go').onclick=run;
+document.getElementById('dDem').onclick=()=>save('dem.json',OUT.dem);
+document.getElementById('dGeo').onclick=()=>save('geo.json',OUT.geo);
+</script></main></body></html>

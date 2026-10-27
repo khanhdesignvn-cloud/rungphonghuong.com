@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mùa Phong Khe Sanh</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Sa bàn 3D rừng phong hương hồ Rào Quán, Khe Sanh: địa hình cắt lớp 100 m, tuyến thuyền vào rừng phong, mùa lá theo tháng, cảnh báo an toàn và trình chiếu tự động.">
+<meta name="theme-color" content="#0A2622">
+<style>
+__FONTS__
+/* Layout: sân khấu 3D toàn màn hình (khung ubo.vn); thanh trên, bảng trái (đáy trên điện thoại), thẻ thông tin phải, trình chiếu dưới giữa.
+   Màu: nhận diện Hương Vị Hòa Bình – xanh rừng #15584F, đỏ #C44125, kem #F6E7C9, vàng #EFCB8F, than #1E1813. */
+:root{
+  --xanh:#15584F;--xanh2:#2A7A6B;--dem:#0A2622;--deep:#061714;--do:#C44125;--do2:#E0603F;--kem:#F6E7C9;--vang:#EFCB8F;--giay:#FBF4E3;--than:#1E1813;--nau:#4A4038;--mo:#8A7B66;
+  --panel:rgba(10,38,34,.86);--line:rgba(246,231,201,.14);--glass:blur(14px) saturate(140%);
+  --display:'SVN Branding Display','Arial Narrow',system-ui,sans-serif;--body:'SVN Branding Body','Segoe UI',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--dem);color:var(--giay);font-family:var(--body);-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;background:radial-gradient(120% 85% at 50% 0%,#1E5F54 0%,#0E3530 45%,#061714 100%)}
+canvas{display:block;outline:none}
+.d{font-family:var(--display);font-weight:normal;text-transform:uppercase;letter-spacing:.01em;line-height:.95}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,a:focus-visible{outline:2px solid var(--vang);outline-offset:2px}
+
+.top{position:fixed;left:0;right:0;top:0;z-index:10;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px));pointer-events:none}
+.brand{display:flex;align-items:center;gap:10px;pointer-events:auto;text-decoration:none;color:var(--giay)}
+.brand svg{width:38px;height:38px;flex:none}
+.brand b{display:block;font-size:25px}
+.brand small{display:block;font-size:12px;color:rgba(246,231,201,.75);margin-top:3px;letter-spacing:.03em}
+.right{display:flex;gap:8px;align-items:center;pointer-events:auto}
+.modes{display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--panel);backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass)}
+.modes button{padding:10px 16px 8px;border-radius:999px;font-family:var(--display);text-transform:uppercase;font-size:14px;letter-spacing:.04em;white-space:nowrap;color:rgba(246,231,201,.82)}
+.modes button.on{background:var(--kem);color:var(--xanh)}
+.safe-btn{display:flex;align-items:center;gap:7px;padding:11px 15px 9px;border-radius:999px;background:var(--panel);backdrop-filter:var(--glass);border:1.5px solid var(--vang);color:var(--vang);font-family:var(--display);text-transform:uppercase;font-size:14px;letter-spacing:.04em}
+.safe-btn svg{width:15px;height:15px}
+.play{display:flex;align-items:center;gap:8px;padding:12px 18px 10px;border-radius:999px;background:var(--do);color:#fff;font-family:var(--display);text-transform:uppercase;font-size:14px;letter-spacing:.04em;box-shadow:0 8px 26px rgba(196,65,37,.45);animation:glow 2.4s ease-in-out infinite}
+.play svg{width:14px;height:14px}
+@keyframes glow{50%{box-shadow:0 8px 34px rgba(196,65,37,.8)}}
+@media(max-width:760px){.top{align-items:center;gap:8px;padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:8px}.brand svg{width:24px;height:24px}.brand b{font-size:11px;line-height:1;white-space:nowrap}.brand{gap:5px;flex:none}.brand small{display:none}.right{gap:5px;flex:1;min-width:0;justify-content:flex-end}.modes{padding:3px;min-width:0;flex:0 1 auto}.modes button{padding:8px 6px 6px;font-size:10.5px;letter-spacing:0;min-width:0}.safe-btn,.play{width:36px;height:36px;flex:none;padding:0;justify-content:center;border-radius:50%}.safe-btn span,.play span{display:none}.play svg{width:13px;height:13px}.safe-btn svg{width:16px;height:16px}}
+
+#labels{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+.lb{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;display:flex;flex-direction:column;align-items:center;transition:opacity .3s}
+/* nhãn kiểu Google Maps: nền trắng, chữ xám đậm, chấm màu theo nhóm */
+.lb .tag{display:flex;align-items:center;gap:6px;padding:6px 10px 5px;border-radius:999px;background:#fff;color:#202124;font-size:12.5px;font-weight:bold;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.25),0 3px 10px rgba(6,23,20,.25);min-height:28px}
+.lb .tag i{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 0 2px #fff inset}
+.lb .stem{width:2px;height:14px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.lb.big .tag{background:var(--do);color:#fff;font-family:var(--display);font-weight:normal;font-size:16px;text-transform:uppercase;padding:8px 13px 6px;box-shadow:0 6px 18px rgba(196,65,37,.45)}
+.lb.big .stem{background:var(--do);height:20px}
+.lb.warn .tag{background:var(--vang);color:var(--than)}
+.lb.road .tag{background:rgba(255,255,255,.94);color:#5F6368;font-weight:bold;font-size:10.5px;padding:3px 8px 2px;min-height:0;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.lb.road .stem{display:none}
+.lb.place .tag{background:none;box-shadow:none;font-size:12px;font-weight:bold;color:#3C4043;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 4px #fff,0 1px 2px #fff;padding:2px 4px}
+.sw.cats button{display:inline-flex;align-items:center;gap:6px}
+.sw.cats button i{width:9px;height:9px;border-radius:50%}
+.sw.cats button.off{opacity:.45;text-decoration:line-through}
+.lb.hide{opacity:0;pointer-events:none}
+.lb.dot .tag span{display:none}.lb.dot .tag{padding:6px}
+
+.panel{position:fixed;z-index:10;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:360px;max-height:calc(100% - 130px);overflow:auto;border-radius:24px;background:var(--panel);backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);padding:18px;scrollbar-width:thin;transition:opacity .4s,transform .4s}
+.panel h2{font-size:30px;margin:0 0 6px;text-wrap:balance;color:var(--kem)}
+.panel .sub{font-size:13px;color:rgba(246,231,201,.78);margin:0 0 14px;line-height:1.5}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.stat{background:rgba(246,231,201,.07);border-radius:16px;padding:10px 12px}
+.stat b{display:block;font-family:var(--display);font-weight:normal;font-size:27px;color:var(--giay);line-height:1;font-variant-numeric:tabular-nums}
+.stat b em{font-style:normal;color:var(--vang)}
+.stat .l{font-size:11.5px;color:rgba(246,231,201,.72);line-height:1.3;display:block;margin-top:5px}
+.h4{font-family:var(--display);text-transform:uppercase;font-size:14px;letter-spacing:.06em;color:var(--vang);margin:16px 0 8px}
+.zl{display:grid;gap:6px}
+.zl button{display:flex;align-items:center;gap:10px;text-align:left;padding:9px 12px;border-radius:14px;background:rgba(246,231,201,.06);font-size:13.5px;transition:background .2s}
+.zl button:hover,.zl button.on{background:rgba(246,231,201,.16)}
+.zl i{width:14px;height:14px;border-radius:5px;flex:none}
+.zl small{margin-left:auto;font-size:11px;color:rgba(246,231,201,.6)}
+.month{display:flex;align-items:center;gap:12px;margin-top:4px}
+.month output{font-family:var(--display);font-size:28px;min-width:3.2ch;color:var(--giay)}
+.month input{flex:1;accent-color:var(--do)}
+.ticks{display:flex;justify-content:space-between;font-size:10.5px;color:rgba(246,231,201,.6);margin:2px 0 0 52px}
+.ticks .now{color:var(--vang)}
+.mnote{font-size:12.5px;color:rgba(246,231,201,.85);margin:8px 0 0;line-height:1.45}
+.ctl{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 4px;font-size:13px;color:rgba(246,231,201,.85)}
+.ctl input[type=range]{flex:1;accent-color:var(--do)}
+.sw{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.sw button{padding:7px 12px 6px;border-radius:999px;background:rgba(246,231,201,.08);font-size:12.5px}
+.sw button.on{background:var(--kem);color:var(--xanh);font-weight:bold}
+.alert{margin-top:14px;border-radius:16px;border:1.5px solid var(--vang);padding:12px 14px;background:rgba(239,203,143,.08)}
+.alert b{display:flex;gap:8px;align-items:center;font-family:var(--display);text-transform:uppercase;font-weight:normal;font-size:15px;color:var(--vang);letter-spacing:.04em}
+.alert p{margin:6px 0 0;font-size:12.5px;line-height:1.5;color:rgba(246,231,201,.9)}
+.alert button{margin-top:8px;padding:7px 12px 6px;border-radius:999px;background:var(--vang);color:var(--than);font-weight:bold;font-size:12.5px}
+.note{font-size:11px;color:rgba(246,231,201,.6);line-height:1.5;margin-top:14px}
+.note a{color:rgba(246,231,201,.88)}
+.badge{display:inline-block;margin-top:10px;padding:5px 10px 4px;border-radius:999px;background:var(--do);color:#fff;font-size:11px;font-weight:bold;letter-spacing:.04em}
+.toggle{display:none}
+@media(max-width:760px){
+  .panel{left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:calc(8px + env(safe-area-inset-bottom,0px));width:auto;max-height:62%;border-radius:22px;padding:12px 14px 14px;transform:translateY(calc(100% - 52px));transition:transform .35s cubic-bezier(.3,.7,.2,1),opacity .4s}
+  .panel.open{transform:none}
+  .toggle{display:flex;align-items:center;justify-content:space-between;width:100%;margin:-2px 0 10px;font-family:var(--display);text-transform:uppercase;font-size:15px;min-height:28px}
+  .toggle span{width:30px;height:30px;border-radius:50%;background:var(--do);color:#fff;display:grid;place-items:center;transition:transform .3s}
+  .panel.open .toggle span{transform:rotate(180deg)}
+  .panel h2{display:none}
+}
+
+.card{position:fixed;z-index:11;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:350px;max-height:calc(100% - 140px);overflow:auto;border-radius:24px;background:var(--giay);color:var(--than);padding:20px;box-shadow:0 20px 50px rgba(6,23,20,.5);transform:translateY(20px);opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.3,.7,.2,1)}
+.card.show{transform:none;opacity:1;pointer-events:auto}
+.card .k{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;color:var(--mo)}
+.card .k i{width:12px;height:12px;border-radius:4px}
+.card h3{font-size:28px;margin:8px 0 10px;color:var(--xanh);text-wrap:balance}
+.card p{font-size:14px;line-height:1.55;color:var(--nau);margin:0}
+.card ul.w{margin:12px 0 0;padding:10px 12px 10px 28px;border-radius:14px;background:#F6E7C9;font-size:13px;line-height:1.5;color:var(--than)}
+.card ul.w li+li{margin-top:4px}
+.card .coord{margin-top:10px;font-size:11.5px;color:var(--mo)}
+.card .row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.card a,.card .x{display:inline-flex;align-items:center;gap:6px;padding:11px 16px 9px;border-radius:999px;font-family:var(--display);text-transform:uppercase;font-size:14px;text-decoration:none}
+.card a{background:var(--xanh);color:var(--giay)}
+.card .x{background:var(--kem);color:var(--than)}
+@media(max-width:760px){.card{left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));width:auto;bottom:auto;top:calc(62px + env(safe-area-inset-top,0px));max-height:46%;padding:16px;border-radius:20px}.card h3{font-size:23px}.card p{font-size:13.5px}}
+
+/* thanh dịch vụ: đặt tour, thuê thuyền, HDV, chụp hình, đặt xe, liên hệ */
+.dock{position:fixed;z-index:10;left:calc(392px + env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;justify-content:center;gap:8px;pointer-events:none}
+.dock button{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;padding:10px 14px 9px;border-radius:999px;background:var(--giay);color:var(--xanh);font-size:13px;font-weight:bold;box-shadow:0 6px 20px rgba(6,23,20,.35);white-space:nowrap;transition:transform .15s,background .15s}
+.dock button:hover{transform:translateY(-2px);background:#fff}
+.dock button svg{width:16px;height:16px;flex:none}
+.dock button.hot{background:var(--do);color:#fff}
+body.touring .dock{opacity:0;pointer-events:none}
+@media(min-width:1180px){body.card-on .dock{right:calc(382px + env(safe-area-inset-right,0px))}}
+@media(max-width:760px){
+  .dock{left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom,0px));flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding:4px max(10px,env(safe-area-inset-right,0px)) 6px max(10px,env(safe-area-inset-left,0px));gap:6px;scrollbar-width:none;pointer-events:auto;-webkit-overflow-scrolling:touch;transition:opacity .3s}
+  .dock::-webkit-scrollbar{display:none}
+  .dock button{padding:9px 12px 8px;font-size:12.5px}
+  .panel.open~.dock,body.sheet-open .dock{opacity:0;pointer-events:none}
+}
+.sheet.svc .in{border-top-color:var(--do);padding-top:20px}
+.sheet.svc h3{color:var(--xanh);font-size:clamp(26px,4.6vw,38px)}
+.inc{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:6px}
+.inc li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:var(--than)}
+.inc li::before{content:'';flex:none;width:8px;height:8px;border-radius:50%;background:var(--do);margin-top:7px}
+.frm{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.frm label{display:grid;gap:4px;font-size:11.5px;font-weight:bold;letter-spacing:.06em;text-transform:uppercase;color:var(--mo)}
+.frm label.full{grid-column:1/-1}
+.frm input,.frm textarea,.frm select{font:inherit;font-size:15px;color:var(--than);padding:10px 12px;border-radius:12px;border:1.5px solid #E3D3B3;background:#fff;width:100%;letter-spacing:0;text-transform:none;font-weight:normal}
+.frm input:focus,.frm textarea:focus,.frm select:focus{outline:2px solid var(--xanh);outline-offset:1px;border-color:var(--xanh)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.acts a,.acts button{display:inline-flex;align-items:center;gap:7px;padding:12px 16px 10px;border-radius:999px;font-family:var(--display);text-transform:uppercase;font-size:14px;text-decoration:none;background:var(--kem);color:var(--than)}
+.acts .pri{background:var(--do);color:#fff}
+.acts .sec{background:var(--xanh);color:var(--giay)}
+.acts svg{width:15px;height:15px}
+.fine{display:block;margin-top:12px;font-size:11.5px;line-height:1.45;color:var(--mo)}
+.toast{position:fixed;z-index:60;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);padding:10px 16px;border-radius:999px;background:var(--than);color:var(--giay);font-size:13px;opacity:0;pointer-events:none;transition:all .3s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:620px){.frm{grid-template-columns:1fr 1fr}.frm label.full{grid-column:1/-1}.acts a,.acts button{flex:1 1 45%;justify-content:center}}
+
+.sheet{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:16px;background:rgba(6,23,20,.6);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s}
+.sheet.show{opacity:1;pointer-events:auto}
+.sheet .in{width:min(760px,100%);max-height:calc(100% - 32px);overflow:auto;background:var(--giay);color:var(--than);border-radius:26px;padding:24px 24px 20px;border-top:8px solid var(--vang)}
+.sheet h3{font-size:clamp(28px,5vw,42px);color:var(--do);margin:4px 0 6px}
+.sheet .eb{font-size:12px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase;color:var(--xanh)}
+.sheet .lead{font-size:14.5px;line-height:1.55;color:var(--nau);margin:0 0 14px}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rule{border-radius:16px;background:#fff;border:1.5px solid #E3D3B3;padding:12px 14px;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+.rule .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--kem);color:var(--xanh);font-family:var(--display);font-size:18px}
+.rule.hi .ic{background:var(--do);color:#fff}
+.rule b{display:block;font-size:14px;color:var(--than)}
+.rule span{display:block;font-size:12.5px;line-height:1.45;color:var(--nau);margin-top:3px}
+.sheet .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;flex-wrap:wrap}
+.sheet .foot small{font-size:11.5px;color:var(--mo);max-width:52ch;line-height:1.45}
+.sheet .foot button{padding:12px 18px 10px;border-radius:999px;background:var(--xanh);color:var(--giay);font-family:var(--display);text-transform:uppercase;font-size:14px}
+@media(max-width:620px){.rules{grid-template-columns:1fr}}
+
+.tour{position:fixed;z-index:12;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);width:min(660px,calc(100% - 32px));opacity:0;pointer-events:none;transition:all .5s cubic-bezier(.3,.7,.2,1)}
+body.touring .tour{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+body.touring .panel{opacity:0;pointer-events:none}
+body.touring .card{opacity:0!important;pointer-events:none!important}
+.tour .box{background:rgba(251,244,227,.97);color:var(--than);border-radius:26px;padding:20px 22px 16px;box-shadow:0 24px 60px rgba(6,23,20,.55)}
+.tour .box.warn{border-top:6px solid var(--vang)}
+.tour .eb{font-size:12px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase;color:var(--do)}
+.tour h3{font-size:clamp(28px,5.4vw,46px);margin:6px 0 8px;color:var(--xanh);text-wrap:balance}
+.tour p{margin:0;font-size:15px;line-height:1.5;color:var(--nau)}
+.tour .bar{display:flex;gap:5px;margin-top:14px}
+.tour .bar i{flex:1;height:4px;border-radius:2px;background:var(--kem);overflow:hidden;position:relative}
+.tour .bar i b{position:absolute;inset:0;background:var(--do);transform-origin:left;transform:scaleX(0)}
+.tour .ctr{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px}
+.tour .ctr button{padding:9px 14px 7px;border-radius:999px;background:var(--kem);color:var(--than);font-family:var(--display);text-transform:uppercase;font-size:13px}
+.big-num{position:fixed;z-index:6;left:50%;top:22%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:0;transition:opacity .6s}
+.big-num.on{opacity:1}
+.big-num b{display:block;white-space:nowrap;font-family:var(--display);font-weight:normal;font-size:clamp(46px,11vw,150px);line-height:.9;color:var(--giay);text-shadow:0 8px 40px rgba(6,23,20,.6);font-variant-numeric:tabular-nums}
+.big-num span{display:block;margin-top:8px;font-size:clamp(13px,2vw,18px);letter-spacing:.16em;text-transform:uppercase;color:var(--giay);font-weight:bold;text-shadow:0 2px 14px rgba(6,23,20,.8)}
+@media(max-width:760px){.big-num{top:42%;width:100%}.big-num b{font-size:clamp(40px,12vw,64px)}}
+
+.compass{position:fixed;z-index:9;right:max(16px,env(safe-area-inset-right,0px));top:calc(84px + env(safe-area-inset-top,0px));width:48px;height:48px;border-radius:50%;background:var(--panel);backdrop-filter:var(--glass);display:grid;place-items:center}
+.compass svg{width:30px;height:30px}
+@media(max-width:760px){.compass{top:auto;bottom:calc(122px + env(safe-area-inset-bottom,0px));right:max(10px,env(safe-area-inset-right,0px));width:40px;height:40px}}
+.hint{position:fixed;z-index:9;left:50%;top:calc(84px + env(safe-area-inset-top,0px));transform:translateX(-50%);padding:9px 16px 7px;border-radius:999px;background:var(--panel);backdrop-filter:var(--glass);font-size:12.5px;color:rgba(246,231,201,.88);transition:opacity .6s;white-space:nowrap;pointer-events:none}
+@media(max-width:760px){.hint{top:calc(64px + env(safe-area-inset-top,0px));font-size:11.5px;padding:7px 12px 5px}}
+.loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--dem);transition:opacity .8s}
+.loader.done{opacity:0;pointer-events:none}
+.loader svg{width:70px;height:auto;display:block;margin:0 auto 18px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(6deg)}}
+.loader .d{font-size:32px;text-align:center;color:var(--kem)}
+.loader p{margin:10px 0 0;text-align:center;color:rgba(246,231,201,.7);font-size:14px}
+.err{display:none;max-width:420px;margin:16px auto 0;text-align:center;color:#FFC9B8;font-size:14px}
+@media(max-width:400px){.brand b{display:none}.modes button{padding:8px 9px 6px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.play,.loader svg{animation:none}}
+</style>
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+  "d3-contour":"https://cdn.jsdelivr.net/npm/d3-contour@4.0.2/+esm"
+}}
+</script>
+</head>
+<body>
+<div id="stage"></div>
+<div id="labels"></div>
+<div class="big-num" id="bigNum"><b id="bigNumV"></b><span id="bigNumL"></span></div>
+
+<div class="loader" id="loader"><div>__LEAF__<div class="d">Đang dựng sa bàn</div><p>Rừng phong hương · hồ Rào Quán · Khe Sanh</p><div class="err" id="err">Trình duyệt không hỗ trợ WebGL hoặc không tải được thư viện 3D. Hãy thử Chrome hoặc Safari bản mới.</div></div></div>
+
+<header class="top">
+  <a class="brand" href="#" aria-label="Mùa Phong Khe Sanh">
+    __LEAF__
+    <span><b class="d">Mùa Phong Khe Sanh</b><small>Sa bàn 3D · Rừng phong hương hồ Rào Quán</small></span>
+  </a>
+  <div class="right">
+    <nav class="modes" aria-label="Chế độ xem">
+      <button data-mode="terrain" class="on" type="button">Bản đồ</button>
+      <button data-mode="layers" type="button">Cắt lớp</button>
+    </nav>
+    <button class="safe-btn" id="safeBtn" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 L15 14 H1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 6v4M8 11.6v.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>An toàn</span></button>
+    <button class="play" id="playBtn" type="button" aria-label="Trình chiếu"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 1 L13 7 L2 13Z" fill="currentColor"/></svg><span>Trình chiếu</span></button>
+  </div>
+</header>
+
+<div class="compass" title="Hướng Bắc"><svg id="needle" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 L26 20 L20 17 L14 20Z" fill="#C44125"/><path d="M20 37 L14 20 L20 23 L26 20Z" fill="#FBF4E3"/></svg></div>
+
+<aside class="panel" id="panel">
+  <button class="toggle" id="ptoggle" type="button">Điểm đến · mùa lá · lớp <span>⌃</span></button>
+  <h2 class="d">Rừng phong hương<br>hồ Rào Quán</h2>
+  <p class="sub">Rừng phong mọc ven và ngập nước quanh hồ thủy điện Rào Quán, xã Hướng Phùng. Muốn vào rừng phải đi thuyền từ bến ở Km 13 đường Hồ Chí Minh.</p>
+  <div class="stats">
+    <div class="stat"><b>Km <span class="n" data-count="13">0</span></b><span class="l">Bến thuyền trên đường HCM nhánh Tây</span></div>
+    <div class="stat"><b>~<span class="n" data-count="14">0</span> <em>km</em></b><span class="l">Cung trekking vòng hồ, khoảng 4 giờ</span></div>
+    <div class="stat"><b><span class="n" data-count="881">0</span> <em>m</em></b><span class="l">Đỉnh Cu Vơ (Đồi 881 Nam), điểm săn mây</span></div>
+    <div class="stat"><b>T12<em>–</em>T1</b><span class="l">Lá đỏ đậm nhất, kéo dài 2–3 tuần</span></div>
+    <div class="stat"><b><span class="n" data-count="480">0</span> <em>m</em></b><span class="l">Cao độ mặt hồ Rào Quán (~6,9 km²)</span></div>
+    <div class="stat"><b><span class="n" data-count="65">0</span> <em>trụ</em></b><span class="l">Tua-bin điện gió quanh Khe Sanh</span></div>
+  </div>
+
+  <div class="h4">Mùa lá</div>
+  <div class="month"><output id="mOut">T12</output><input id="month" type="range" min="0" max="5" step="1" value="3" aria-label="Tháng"></div>
+  <div class="ticks"><span>T9</span><span class="now">T10·nay</span><span>T11</span><span>T12</span><span>T1</span><span>T2</span></div>
+  <p class="mnote" id="mNote"></p>
+
+  <div class="alert"><b><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1 L15 14 H1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 6v4M8 11.6v.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Vào rừng phong phải đi thuyền</b>
+    <p>Mặc áo phao suốt hành trình, chỉ đi thuyền có người lái của địa phương, không tự bơi hay lội ra các gốc phong ngập nước.</p>
+    <button id="safeBtn2" type="button">Xem đủ 8 lưu ý</button></div>
+
+  <div class="h4">Điểm đến · bấm để lọc</div>
+  <div class="sw cats" id="cats"></div>
+  <div class="zl" id="zl"></div>
+  <div class="ctl"><label for="ex">Độ cao phóng đại</label><input id="ex" type="range" min="1" max="3" step=".1" value="1.8"><b id="exv">1.8×</b></div>
+  <div class="sw">
+    <button id="bPhong" class="on" type="button">Rừng phong</button>
+    <button id="bBoat" class="on" type="button">Tuyến thuyền</button>
+    <button id="bWind" class="on" type="button">Điện gió</button>
+    <button id="bCars" class="on" type="button">Xe cộ</button>
+    <button id="bLabels" class="on" type="button">Nhãn</button>
+    <button id="bRotate" class="on" type="button">Tự xoay</button>
+    <button id="bReset" type="button">Góc nhìn đầu</button>
+  </div>
+  __BADGE__
+  <p class="note">Sa bàn minh họa do Mùa Phong Khe Sanh dựng. Vị trí các điểm đã đối chiếu với Google Maps (10/2026). __DATANOTE__ Số liệu tham khảo: <a href="https://baolamdong.vn/khe-sanh-trai-nghiem-trekking-san-mua-la-phong-do-doc-dao-409725.html" target="_blank" rel="noopener">Báo Lâm Đồng</a>, <a href="https://nhandan.vn/mua-la-phong-huong-giua-dai-ngan-post931025.html" target="_blank" rel="noopener">Nhân Dân</a>, <a href="https://baovanhoa.vn/du-lich/man-nhan-voi-mua-phong-huong-trut-la-185569.html" target="_blank" rel="noopener">Báo Văn hóa</a>. Không dùng để dẫn đường.</p>
+</aside>
+
+<div class="card" id="card">
+  <div class="k"><i id="ck"></i><span id="ckt"></span></div>
+  <h3 class="d" id="ct"></h3>
+  <p id="cd"></p>
+  <ul class="w" id="cw" hidden></ul>
+  <div class="coord" id="cc"></div>
+  <div class="row"><button class="x" id="cbook" type="button" style="background:var(--do);color:#fff">Đặt tour</button><a id="cmap" href="#" target="_blank" rel="noopener">Google Maps ↗</a><button class="x" id="cx" type="button">Đóng</button></div>
+</div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetH">
+  <div class="in">
+    <div class="eb">Trước khi vào rừng phong</div>
+    <h3 class="d" id="sheetH">8 lưu ý an toàn</h3>
+    <p class="lead">Rừng phong hương nằm ven và giữa lòng hồ thủy điện. Không có đường bộ đi thẳng tới các gốc phong ngập nước; lối duy nhất là thuyền của người dân địa phương từ bến Km 13.</p>
+    <div class="rules" id="rules"></div>
+    <div class="foot"><small>Lưu ý tổng hợp từ báo chí và thực tế tour địa phương. Hỏi lại đơn vị tour về giá thuyền, giấy tờ và tình hình mực nước trước ngày đi.</small><button id="sheetX" type="button">Đã hiểu</button></div>
+  </div>
+</div>
+
+<div class="tour" id="tour" aria-live="polite">
+  <div class="box" id="tBox">
+    <div class="eb" id="tEb"></div>
+    <h3 class="d" id="tH"></h3>
+    <p id="tP"></p>
+    <div class="bar" id="tBar"></div>
+    <div class="ctr"><button id="tPrev" type="button">← Trước</button><button id="tStop" type="button">Thoát</button><button id="tNext" type="button">Tiếp →</button></div>
+  </div>
+</div>
+<div class="hint" id="hint">Kéo để xoay · Cuộn hoặc chụm để phóng to · Chạm nhãn để xem</div>
+<nav class="dock" id="dock" aria-label="Dịch vụ"></nav>
+<div class="sheet svc" id="svc" role="dialog" aria-modal="true" aria-labelledby="svcH">
+  <div class="in">
+    <div class="eb" id="svcEb">Dịch vụ</div>
+    <h3 class="d" id="svcH"></h3>
+    <p class="lead" id="svcP"></p>
+    <ul class="inc" id="svcInc"></ul>
+    <form class="frm" id="svcForm" autocomplete="on">
+      <label>Họ tên<input name="name" placeholder="Nguyễn Văn A" autocomplete="name"></label>
+      <label>Điện thoại / Zalo<input name="phone" type="tel" inputmode="tel" placeholder="09xx xxx xxx" autocomplete="tel"></label>
+      <label>Ngày đi<input name="date" type="date"></label>
+      <label>Số người<input name="n" type="number" min="1" max="60" value="2" inputmode="numeric"></label>
+      <label class="full">Ghi chú<textarea name="note" rows="2" placeholder="Điểm đón, giờ đi, yêu cầu riêng…"></textarea></label>
+    </form>
+    <div class="acts">
+      <button class="pri" id="svcZalo" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h12v8H6l-3 2.5V11H2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>Gửi qua Zalo</button>
+      <a class="sec" id="svcTel" href="#"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h3l1.5 3.5L6 7a8 8 0 0 0 3 3l1.5-1.5L14 10v3a1 1 0 0 1-1 1A11 11 0 0 1 2 3a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Gọi ngay</a>
+      <a id="svcMail" href="#"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 4.5 8 9l5.5-4.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Gửi email</a>
+      <button class="x" id="svcX" type="button">Đóng</button>
+    </div>
+    <small class="fine" id="svcFine">Thông tin bạn điền chỉ dùng để soạn tin nhắn gửi đi, không lưu ở đâu khác. Giá được báo theo nhóm và ngày đi; xác nhận lại mực nước hồ và thời tiết trước ngày khởi hành.</small>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { contours } from 'd3-contour';
+
+/* ================= DỮ LIỆU ================= */
+const DEM = __DEM__;
+const GEO = __GEO__;
+const LAKE_PNG = 'data:image/png;base64,' + GEO.lake;
+const C = {xanh:0x15584F, do:0xC44125, kem:0xF6E7C9, vang:0xEFCB8F, giay:0xFBF4E3, than:0x1E1813};
+
+const CAT = {
+  phong:{label:'Rừng phong',color:'#C44125'}, water:{label:'Hồ & thuyền',color:'#3E8E8A'},
+  cloud:{label:'Săn mây & gió',color:'#EFCB8F'}, history:{label:'Ký ức Khe Sanh',color:'#8A7B66'},
+  nature:{label:'Thác & núi',color:'#8FAE86'}, stay:{label:'Cà phê & lưu trú',color:'#E0603F'}, hub:{label:'Đô thị & cửa khẩu',color:'#F6E7C9'}
+};
+// Toạ độ đối chiếu Google Maps 27/10/2026; đập theo đầu sông Rào Quán trên OpenStreetMap
+const POIS = [
+  {id:'phong', name:'Rừng phong hương Rào Quán', short:'Rừng phong hương', cat:'phong', lat:GEO.phong.lat, lon:GEO.phong.lon, big:true,
+   desc:'Phong hương (sau sau, Liquidambar formosana) mọc ven bờ và ngập nước quanh nhánh tây bắc hồ Rào Quán, gần bến Km 13. Lá ba thùy chuyển vàng, cam rồi đỏ từ tháng 10 đến tháng 1.',
+   warn:['Chỉ tiếp cận bằng thuyền từ bến Km 13','Không leo lên các gốc cây ngập nước để chụp ảnh','Mùa lá đẹp chỉ 2–3 tuần, mực nước có thể thấp khi hồ xả']},
+  {id:'ben', name:'Bến thuyền Km 13', short:'Bến thuyền Km 13', cat:'phong', lat:GEO.ben[0], lon:GEO.ben[1],
+   desc:'Điểm ngắm rừng phong xã Hướng Phùng, cạnh đường Hồ Chí Minh nhánh Tây, ở cuối một nhánh hồ nhỏ. Thuyền máy của người dân chở khách ra lòng hồ và rừng phong ngập nước.',
+   warn:['Đoạn từ đường nhựa xuống bến là đường đất đỏ, trơn khi mưa; xe gầm thấp dễ chạm gầm','Hỏi kỹ lối xuống bến, có lối dễ đi hơn cách vài trăm mét','Thỏa thuận giá thuyền và số người trước khi lên thuyền']},
+  {id:'ho', name:'Hồ thủy điện Rào Quán', short:'Hồ Rào Quán', cat:'water', lat:16.6963813, lon:106.6945909,
+   desc:'Hồ chứa lớn nhất vùng Hướng Hóa, mặt nước khoảng 6,9 km² theo OpenStreetMap, cao khoảng 480 m. Bao quanh là Cu Vơ, các đồi điện gió và rừng phong.',
+   warn:['Mực nước thay đổi theo mùa và lịch vận hành thủy điện','Không bơi ở lòng hồ sâu, không câu cá ở mép bờ dựng đứng']},
+  {id:'caycodon', name:'Cây cô đơn hồ Rào Quán', short:'Cây cô đơn', cat:'water', lat:16.6901292, lon:106.6909101,
+   desc:'Cây đơn độc bên mép hồ phía nam, sát đường Hồ Chí Minh nhánh Tây. Điểm dừng chụp ảnh nhanh, lối vào là đường đất ngắn.',
+   warn:['Lối đất từ đường HCM vào trơn và lầy sau mưa','Không tắm hồ tại đây']},
+  {id:'dap', name:'Đập thủy điện Rào Quán', short:'Đập Rào Quán', cat:'water', lat:GEO.dam[0], lon:GEO.dam[1],
+   desc:'Đầu phía nam lòng hồ, nơi sông Rào Quán chảy về Khe Sanh. Nước được dẫn tiếp về hồ và nhà máy thủy điện Hạ Rào Quán.'},
+  {id:'cuvo', name:'Đỉnh Cu Vơ', short:'Đỉnh Cu Vơ · 881 m', cat:'cloud', lat:16.6897249, lon:106.6617858,
+   desc:'Đồi 881 Nam trong chiến tranh, nay có điện gió trên đỉnh. Điểm ngắm bình minh, săn mây và nhìn xuống hồ Rào Quán.',
+   warn:['Lên đỉnh trước 6 giờ sáng để săn mây, mang áo ấm','Đường lên dốc, nên đi xe số hoặc ô tô gầm cao']},
+  {id:'santan', name:'Điểm săn mây điện gió Hướng Tân', short:'Săn mây Hướng Tân', cat:'cloud', lat:16.677293, lon:106.6872232,
+   desc:'Đồi cỏ giữa các tua-bin phía nam hồ. Mây đẹp từ khoảng 5:30 đến 7:00 sáng, chiều có hoàng hôn.'},
+  {id:'diengio', name:'Điện gió Hướng Tân', short:'Điện gió Hướng Tân', cat:'cloud', lat:16.6642596, lon:106.698809,
+   desc:'Cụm tua-bin trên đồi phía bắc trung tâm Khe Sanh. Đường lên dễ đi, ô tô thường đỗ ngoài barie rồi đi bộ vào.'},
+  {id:'tacon', name:'Di tích sân bay Tà Cơn', short:'Sân bay Tà Cơn', cat:'history', lat:16.6537081, lon:106.7244466,
+   desc:'Đầu cầu hàng không của cụm cứ điểm Khe Sanh giai đoạn 1966–1968, nay là khu di tích có bảo tàng, máy bay, xe tăng và hầm hào.'},
+  {id:'tuongdai', name:'Tượng đài Chiến thắng Khe Sanh', short:'Tượng đài Khe Sanh', cat:'history', lat:16.6350962, lon:106.7414747,
+   desc:'Ngay trung tâm Khe Sanh, nơi QL9 gặp đường Hồ Chí Minh nhánh Tây. Điểm tập kết của nhiều tour.'},
+  {id:'baothap', name:'Bảo tháp Khe Sanh', short:'Bảo tháp Khe Sanh', cat:'history', lat:16.6236171, lon:106.738449,
+   desc:'Công trình tháp trên đường Hùng Vương, phía nam trung tâm Khe Sanh.'},
+  {id:'langvay', name:'Di tích Căn cứ Làng Vây', short:'Làng Vây', cat:'history', lat:16.6003884, lon:106.6683026,
+   desc:'Di tích chiến thắng căn cứ Làng Vây trên QL9, giữa Khe Sanh và Lao Bảo.'},
+  {id:'laobao', name:'Di tích Nhà tù Lao Bảo', short:'Nhà tù Lao Bảo', cat:'history', lat:16.6107571, lon:106.5880982,
+   desc:'Một trong năm nhà tù lớn thời Pháp, nay còn lại phế tích. Gần cửa khẩu quốc tế Lao Bảo.'},
+  {id:'cuakhau', name:'Cửa khẩu quốc tế Lao Bảo', short:'Cửa khẩu Lao Bảo', cat:'hub', lat:16.6232255, lon:106.5906508,
+   desc:'Cửa khẩu đường bộ sang Lào trên QL9, nhiều xe tải và xe khách qua lại. Mở cửa khoảng 7:00–22:00.'},
+  {id:'khesanh', name:'Trung tâm xã Khe Sanh', short:'Khe Sanh', cat:'hub', lat:16.6294268, lon:106.7403677,
+   desc:'Chợ Khe Sanh và các phố Hùng Vương, Lê Duẩn. Chợ họp từ sáng sớm, có cà phê và đặc sản địa phương.'},
+  {id:'homi', name:'Homi Coffee', short:'Homi Coffee', cat:'stay', lat:16.6363652, lon:106.7585293,
+   desc:'Quán cà phê ven QL9 phía đông Khe Sanh, nhìn xuống thung lũng sông. Bán cả cà phê hạt địa phương.'},
+  {id:'retro', name:'Retro Khe Sanh', short:'Retro Khe Sanh', cat:'stay', lat:16.6353849, lon:106.7573972,
+   desc:'Cà phê, phòng nghỉ và glamping trên sườn đồi cạnh QL9, view thung lũng.'},
+  {id:'mori', name:'Mori Khe Sanh', short:'Mori Khe Sanh', cat:'stay', lat:16.6359417, lon:106.7581291,
+   desc:'Quán cà phê, quán ăn ven đường Lương Lễ, cùng cụm với Homi và Retro.'},
+  {id:'vuonnd', name:'Farm Stay Vườn Nhiệt Đới', short:'Vườn Nhiệt Đới', cat:'stay', lat:16.6365398, lon:106.7483397,
+   desc:'Farmstay với các căn bungalow ở thôn Tân Xuyên, gần trung tâm.'},
+  {id:'valley', name:'Khe Sanh Valley Farm', short:'Valley Farm', cat:'stay', lat:16.6493351, lon:106.7165925,
+   desc:'Nhà hàng vườn bên hồ nhỏ gần Tà Cơn, rau trái tự trồng.'},
+  {id:'rose', name:'Rose Farm', short:'Rose Farm', cat:'stay', lat:16.6762279, lon:106.6954895,
+   desc:'Vườn hoa, điểm chụp ảnh gần cụm điện gió Hướng Tân trên đường lên hồ.'},
+  {id:'charm', name:'Charm Cafe & More (Ruộng)', short:'Charm Cafe', cat:'stay', lat:16.6586976, lon:106.7119231,
+   desc:'Cà phê sân vườn nhiều hoa, nhìn ra đồi và tua-bin điện gió.'},
+  {id:'voimep', name:'Đỉnh Voi Mẹp · 1.707 m', short:'Voi Mẹp · 1.707 m', cat:'nature', lat:16.7685011, lon:106.7128209,
+   desc:'Nóc nhà Quảng Trị, còn gọi Tá Linh Sơn, giáp ranh Hướng Linh, Hướng Sơn và Hướng Hiệp. Rừng nguyên sinh, dốc đá, nhiều suối; leo núi nhiều ngày.',
+   warn:['Chỉ leo cùng hướng dẫn viên và đơn vị có kinh nghiệm','Đêm trên núi rất lạnh, đường mòn không rõ, nhiều suối đá']},
+  {id:'chenhvenh', name:'Du lịch cộng đồng Chênh Vênh', short:'Bản Chênh Vênh', cat:'nature', lat:16.7691204, lon:106.5764629,
+   desc:'Làng du lịch cộng đồng của đồng bào Vân Kiều ở xã Hướng Phùng, ven đường Hồ Chí Minh nhánh Tây.'},
+  {id:'thaccv', name:'Thác Chênh Vênh', short:'Thác Chênh Vênh', cat:'nature', lat:16.7741661, lon:106.5792438,
+   desc:'Thác nhỏ cạnh bản Chênh Vênh, đi bộ khoảng 5 phút từ đường lớn, có bậc tre xuống suối.',
+   warn:['Bậc tre và đá suối trơn','Không xuống tắm khi nước lớn sau mưa']},
+  {id:'tapuong', name:'Thác Tà Puồng', short:'Thác Tà Puồng', cat:'nature', lat:16.865916, lon:106.5791456,
+   desc:'Thác ở xã Hướng Lập, cách đường HCM nhánh Tây khoảng 800–900 m đường mòn ven suối. Gần đó có đồng lúa Tà Puồng.',
+   warn:['Đường mòn có đoạn leo đá, nhiều vắt vào mùa mưa','Nước chảy xiết, cân nhắc trước khi tắm']},
+  {id:'dongtapuong', name:'Đồng lúa Tà Puồng', short:'Đồng lúa Tà Puồng', cat:'nature', lat:16.861572, lon:106.57839,
+   desc:'Ruộng bậc thang nhỏ của bản Tà Puồng dưới chân núi, đẹp nhất mùa lúa chín.'},
+  {id:'huongphung', name:'Trung tâm xã Hướng Phùng', short:'Hướng Phùng', cat:'hub', lat:16.7432538, lon:106.5791868,
+   desc:'Trung tâm xã biên giới Hướng Phùng trên đường HCM nhánh Tây, điểm dừng trên đường lên Chênh Vênh và Tà Puồng.'},
+  {id:'trosie', name:'Trosie Garden', short:'Trosie Garden', cat:'stay', lat:16.6436337, lon:106.7251385,
+   desc:'Khu nghỉ, ăn uống, cắm trại ở Km 2 đường Hồ Chí Minh. Lối vào có đoạn đất đá.'}
+];
+const ROAD_LABELS=[[16.6200,106.7110,'QL9 · Đường 9'],[16.6030,106.6420,'QL9 → Lao Bảo'],[16.6390,106.7880,'QL9 → Đông Hà ~60 km'],
+  [16.6620,106.7120,'Đường HCM nhánh Tây'],[16.7230,106.6460,'HCM Tây → Hướng Phùng'],[16.6220,106.5700,'QL9E · sang Lào'],[16.6050,106.7450,'ĐT587'],[16.5650,106.6720,'ĐT586'],[16.6170,106.5700,'Sông Sê Pôn · biên giới'],[16.8020,106.5880,'Đèo Sa Mù · HCM Tây'],[16.8500,106.5700,'HCM Tây → Tà Puồng'],[16.7480,106.6000,'Đường A Roong – Hướng Lập']];
+const MONTHS=[
+ {m:'T9',mix:[1,0,0,0,0],note:'Rừng còn xanh. Hợp đi thuyền, cắm trại và săn mây.'},
+ {m:'T10',mix:[.8,.17,.03,0,0],note:'Bây giờ: lá ngả vàng lác đác, còn sớm để ngắm đỏ.'},
+ {m:'T11',mix:[.45,.35,.17,.03,0],note:'Vàng và cam rõ dần ven hồ.'},
+ {m:'T12',mix:[.08,.14,.3,.46,.02],note:'Đỏ đậm nhất từ giữa tháng. Đặt thuyền và tour sớm.'},
+ {m:'T1',mix:[.05,.08,.3,.37,.2],note:'Đỏ cam đầu tháng, sau đó lá rụng dần.'},
+ {m:'T2',mix:[.25,.05,.05,.05,.6],note:'Cây trơ cành trên mặt nước, lộc non bắt đầu nhú.'}
+];
+const LEAFC=['#4E7A45','#E2B93B','#E07A2C','#C44125','#8A7B66'];
+const RULES=[
+ ['01','Áo phao suốt hành trình',"Mặc và cài khóa áo phao từ lúc bước xuống bến tới khi lên bờ, kể cả người biết bơi.",true],
+ ['02','Thuyền có người lái địa phương','Không tự chèo hay mượn thuyền. Không chở quá số người cho phép, ngồi yên khi thuyền chạy.',true],
+ ['03','Không bơi, không lội ra gốc phong','Lòng hồ sâu, đáy nhiều thân cây chìm. Chụp ảnh từ thuyền hoặc từ bờ.',true],
+ ['04','Mực nước thay đổi','Mực nước phụ thuộc mùa và lịch vận hành thủy điện. Hỏi người lái thuyền trước khi ra cồn hoặc cắm trại sát mép nước.',false],
+ ['05','Không đi khi mưa giông','Gió giật trên mặt hồ rộng rất nguy hiểm. Đường đất đỏ xuống bến lầy và trơn sau mưa.',true],
+ ['06','Trekking cần hướng dẫn viên','Cung 14 km theo lối mòn tuần tra cũ, có dốc, suối, đá rêu, không có biển chỉ dẫn. Không tách đoàn.',false],
+ ['07','Đi đúng lối mòn','Quảng Trị còn vật liệu nổ sót lại sau chiến tranh. Không đào bới, không nhặt vật lạ, không đi vào lối lạ.',true],
+ ['08','Vùng biên giới','Hướng Phùng là xã biên giới. Mang CCCD, hỏi đơn vị tour về khai báo khi cắm trại qua đêm. Mang rác ra khỏi rừng.',false]
+];
+
+/* ================= TOẠ ĐỘ ================= */
+const W = DEM.W, H = DEM.H;
+const raw = Uint8Array.from(atob(DEM.b64), c => c.charCodeAt(0));
+const HM = new Float32Array(W*H); { const dv = new DataView(raw.buffer); for (let i=0;i<W*H;i++) HM[i] = dv.getUint16(i*2, true); }
+const latC = (DEM.lat0+DEM.lat1)/2, lonC = (DEM.lon0+DEM.lon1)/2;
+const KX = 111.32*Math.cos(latC*Math.PI/180)*10, KZ = 110.57*10;  // 1 đơn vị = 100 m
+const WD = (DEM.lon1-DEM.lon0)*KX, DD = (DEM.lat1-DEM.lat0)*KZ;
+let EX = 1.8; const yOf = m => m/100*EX;
+const toX = lon => (lon-lonC)*KX, toZ = lat => -(lat-latC)*KZ;
+const fromXZ = (x,z)=>({lon:x/KX+lonC, lat:-z/KZ+latC});
+const gi = lon => (lon-DEM.lon0)/(DEM.lon1-DEM.lon0)*(W-1), gj = lat => (DEM.lat1-lat)/(DEM.lat1-DEM.lat0)*(H-1);
+function hAtGrid(fi, fj){
+  fi=Math.max(0,Math.min(W-1.001,fi)); fj=Math.max(0,Math.min(H-1.001,fj));
+  const i=Math.floor(fi), j=Math.floor(fj), a=fi-i, b=fj-j;
+  const p=HM[j*W+i], q=HM[j*W+i+1], r=HM[(j+1)*W+i], s=HM[(j+1)*W+i+1];
+  return (p*(1-a)+q*a)*(1-b)+(r*(1-a)+s*a)*b;
+}
+const hAt = (lat,lon) => hAtGrid(gi(lon), gj(lat));
+const gmaps = (lat,lon) => `https://www.google.com/maps/search/?api=1&query=${lat.toFixed(5)},${lon.toFixed(5)}`;
+let seed=11; const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+
+/* ================= HỒ ================= */
+const lakeImg = await new Promise((res,rej)=>{const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=LAKE_PNG;});
+const LW=lakeImg.width, LH=lakeImg.height;
+const lakeData = (()=>{const c=document.createElement('canvas');c.width=LW;c.height=LH;const x=c.getContext('2d');x.drawImage(lakeImg,0,0);const d=x.getImageData(0,0,LW,LH).data;const m=new Uint8Array(LW*LH);for(let k=0;k<LW*LH;k++)m[k]=d[k*4]>127?1:0;return m;})();
+const lij=(lat,lon)=>[Math.floor((lon-DEM.lon0)/(DEM.lon1-DEM.lon0)*LW), Math.floor((DEM.lat1-lat)/(DEM.lat1-DEM.lat0)*LH)];
+const wetAt=(i,j)=>i>=0&&j>=0&&i<LW&&j<LH&&lakeData[j*LW+i]===1;
+const inLake=(lat,lon,pad=0)=>{const [i,j]=lij(lat,lon); for(let dy=-pad;dy<=pad;dy++)for(let dx=-pad;dx<=pad;dx++) if(wetAt(i+dx,j+dy)) return true; return false;};
+function shoreDist(lat,lon,max=14){ const [i,j]=lij(lat,lon), w=wetAt(i,j); for(let r=1;r<=max;r++){ for(let a=0;a<16;a++){const t=a/16*Math.PI*2; if(wetAt(Math.round(i+Math.cos(t)*r),Math.round(j+Math.sin(t)*r))!==w) return w?-r:r;} } return w?-max-1:max+1; }
+const LAKE_M = GEO.lakeLevel;
+for (let j=0;j<H;j++) for (let i=0;i<W;i++){
+  const li=Math.min(LW-1,Math.floor((i+.5)/W*LW)), lj=Math.min(LH-1,Math.floor((j+.5)/H*LH));
+  let wet=0; for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const x=li+dx,y=lj+dy;if(x>=0&&y>=0&&x<LW&&y<LH)wet+=lakeData[y*LW+x];}
+  if (wet>3) HM[j*W+i] = Math.min(HM[j*W+i], LAKE_M-10);
+}
+let HMIN=1e9,HMAX=0; for(const v of HM){HMIN=Math.min(HMIN,v);HMAX=Math.max(HMAX,v);}
+
+/* ================= SCENE ================= */
+const stage = document.getElementById('stage');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({antialias:true, alpha:true}); }
+catch(e){ document.getElementById('err').style.display='block'; throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth<760?1.5:2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.18;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0E3530, 520, 1250);
+const camera = new THREE.PerspectiveCamera(38, innerWidth/innerHeight, 1, 2000);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = .07;
+controls.maxPolarAngle = Math.PI*0.47; controls.minDistance = 10; controls.maxDistance = 900;
+controls.autoRotate = true; controls.autoRotateSpeed = .4;
+const MOBILE = innerWidth<760;
+const PH = {x:toX(GEO.phong.lon), z:toZ(GEO.phong.lat)};
+// Góc nhìn đầu thấy toàn vùng: Lao Bảo – Khe Sanh (nam) tới Tà Puồng – Voi Mẹp (bắc)
+const HOME = {pos:new THREE.Vector3(WD*.30, WD*.95, DD*.92), tgt:new THREE.Vector3(6,10,4)};
+if (MOBILE){ HOME.tgt.set(4,10,-4); HOME.pos.set(WD*.55, WD*1.35, DD*.95); }
+const INTRO_FROM = HOME.pos.clone().applyAxisAngle(new THREE.Vector3(0,1,0), -1.1).multiplyScalar(1.9).add(new THREE.Vector3(0,120,0));
+camera.position.copy(INTRO_FROM); controls.target.copy(HOME.tgt);
+
+scene.add(new THREE.HemisphereLight(0xfff6e4, 0x123a33, 1.15));
+const sun = new THREE.DirectionalLight(0xfff0dc, 2.0);
+sun.position.set(-190,240,-120); sun.castShadow = true;
+sun.shadow.mapSize.set(MOBILE?1024:2048, MOBILE?1024:2048);
+Object.assign(sun.shadow.camera,{left:-WD*.6,right:WD*.6,top:DD*.6,bottom:-DD*.6,near:10,far:900});
+sun.shadow.bias = -0.0006; sun.shadow.normalBias = .4;
+scene.add(sun);
+
+/* ================= TEXTURE ================= */
+const TW=MOBILE?1600:2200, TH=Math.round(TW*DD/WD);
+// Bảng màu phỏng Google Maps (chế độ địa hình): đất thấp kem nhạt, cao dần xanh lục, đỉnh xám nhạt
+const ramp = [[150,'#F4F2EA'],[250,'#EDF1DD'],[350,'#E2EDCF'],[450,'#D6E7C1'],[550,'#CADFB4'],[700,'#BDD6A8'],[900,'#B2CD9F'],[1200,'#ABC59A'],[1500,'#C0C8B2'],[1800,'#D8DCD2']];
+const hex = s=>[parseInt(s.slice(1,3),16),parseInt(s.slice(3,5),16),parseInt(s.slice(5,7),16)];
+const rampRGB = ramp.map(([h,c])=>[h,hex(c)]);
+function rampAt(h){ if(h<=rampRGB[0][0]) return rampRGB[0][1]; for(let k=1;k<rampRGB.length;k++){if(h<=rampRGB[k][0]){const [h0,c0]=rampRGB[k-1],[h1,c1]=rampRGB[k];const t=(h-h0)/(h1-h0);return c0.map((v,i)=>v+(c1[i]-v)*t);}}return rampRGB[rampRGB.length-1][1];}
+function lakePaint(ctx, sx, sy, rgb){
+  const c=document.createElement('canvas');c.width=LW;c.height=LH;const x=c.getContext('2d');
+  const id=x.createImageData(LW,LH); for(let k=0;k<LW*LH;k++){if(lakeData[k]){id.data[k*4]=rgb[0];id.data[k*4+1]=rgb[1];id.data[k*4+2]=rgb[2];id.data[k*4+3]=255;}}
+  x.putImageData(id,0,0); ctx.imageSmoothingEnabled=true; ctx.drawImage(c,0,0,sx,sy);
+}
+const px = lon => (lon-DEM.lon0)/(DEM.lon1-DEM.lon0)*TW, py = lat => (DEM.lat1-lat)/(DEM.lat1-DEM.lat0)*TH;
+const kmPx = TW/((DEM.lon1-DEM.lon0)*111.32*Math.cos(latC*Math.PI/180));
+const line=(ctx,pts)=>{ctx.beginPath(); pts.forEach(([la,lo],i)=>i?ctx.lineTo(px(lo),py(la)):ctx.moveTo(px(lo),py(la)));};
+const WATER_RGB=[158,205,245];
+function drawWaters(ctx, scale=1, col='rgb(158,205,245)'){
+  ctx.lineJoin='round'; ctx.lineCap='round';
+  for(const r of GEO.rivers){ line(ctx,r.pts); ctx.strokeStyle=col; ctx.lineWidth=(r.name?4.5:2.4)*scale; ctx.stroke(); }
+  for(const w of GEO.waters) for(const ring of w.rings){ line(ctx,ring); ctx.closePath(); ctx.fillStyle=col; ctx.fill(); }
+}
+// Đường phỏng Google Maps: quốc lộ vàng viền nâu, tỉnh lộ trắng viền xám
+const RS={trunk:{w:9,f:'#F8C85A',o:'#D2A03A'},primary:{w:8,f:'#FBDF8E',o:'#D9B25A'},secondary:{w:6,f:'#FFFFFF',o:'#C9C2B4'},tertiary:{w:3.8,f:'#FFFFFF',o:'#D3CDC1'}};
+function drawRoads(ctx, scale=1){
+  const rs=[...GEO.roads].sort((a,b)=>(RS[a.hw]||RS.tertiary).w-(RS[b.hw]||RS.tertiary).w);
+  ctx.lineJoin='round'; ctx.lineCap='round';
+  for(const pass of [0,1]) for (const r of rs){ const s=RS[r.hw]||RS.tertiary;
+    line(ctx,r.pts);
+    if(!pass){ ctx.strokeStyle=s.o; ctx.lineWidth=(s.w+2.6)*scale; } else { ctx.strokeStyle=s.f; ctx.lineWidth=s.w*scale; }
+    ctx.stroke(); }
+  // biên giới Việt – Lào theo sông Sê Pôn (Xê Pôn) ở góc tây nam
+  ctx.save(); ctx.setLineDash([10*scale,6*scale,3*scale,6*scale]); ctx.strokeStyle='rgba(120,86,110,.9)'; ctx.lineWidth=3.5*scale;
+  for(const r of GEO.rivers) if(/Pôn|ເຊໂປນ/.test(r.name)){ line(ctx,r.pts); ctx.stroke(); }
+  ctx.restore();
+}
+function phongZone(ctx){ const x=px(GEO.phong.lon), y=py(GEO.phong.lat), r=GEO.phong.r_km*kmPx;
+  const g=ctx.createRadialGradient(x,y,r*.2,x,y,r); g.addColorStop(0,'rgba(196,65,37,.28)'); g.addColorStop(1,'rgba(196,65,37,0)');
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+  ctx.save(); ctx.setLineDash([16,10]); ctx.lineWidth=4; ctx.strokeStyle='rgba(196,65,37,.85)'; ctx.beginPath(); ctx.arc(x,y,r*.92,0,Math.PI*2); ctx.stroke(); ctx.restore(); }
+const baseCanvas = document.createElement('canvas'); baseCanvas.width=TW; baseCanvas.height=TH;
+{
+  const ctx=baseCanvas.getContext('2d'); const img=ctx.createImageData(TW,TH); const d=img.data;
+  const L=[-0.6,-0.65,0.47]; const n=Math.hypot(...L); L[0]/=n;L[1]/=n;L[2]/=n;
+  const cell=(WD*100)/(W-1);
+  for(let y=0;y<TH;y++){ const fj=(y+.5)/TH*(H-1);
+    for(let x=0;x<TW;x++){ const fi=(x+.5)/TW*(W-1);
+      const h=hAtGrid(fi,fj), hx=hAtGrid(fi+.5,fj)-hAtGrid(fi-.5,fj), hy=hAtGrid(fi,fj+.5)-hAtGrid(fi,fj-.5);
+      const nx=-hx*1.6/cell, ny=-hy*1.6/cell; const nn=Math.hypot(nx,ny,1);
+      let sh=(nx*L[0]+ny*L[1]+L[2])/nn; sh=.74+.38*Math.max(0,sh);
+      const c=rampAt(h); const k=(y*TW+x)*4;
+      const band=h%100; const line=(band<3||band>97)?.86:((h%50<1.4||h%50>48.6)?.94:1);
+      d[k]=Math.min(255,c[0]*sh*line); d[k+1]=Math.min(255,c[1]*sh*line); d[k+2]=Math.min(255,c[2]*sh*line); d[k+3]=255;
+    }}
+  ctx.putImageData(img,0,0); drawWaters(ctx); lakePaint(ctx,TW,TH,WATER_RGB);
+}
+const terrainCanvas=document.createElement('canvas'); terrainCanvas.width=TW; terrainCanvas.height=TH;
+const overlayCanvas=document.createElement('canvas'); overlayCanvas.width=TW; overlayCanvas.height=TH;
+const terrainTex=new THREE.CanvasTexture(terrainCanvas), overlayTex=new THREE.CanvasTexture(overlayCanvas);
+for (const t of [terrainTex,overlayTex]){t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=renderer.capabilities.getMaxAnisotropy();}
+function paintTextures(){
+  let c=terrainCanvas.getContext('2d'); c.clearRect(0,0,TW,TH); c.drawImage(baseCanvas,0,0); drawRoads(c); phongZone(c); terrainTex.needsUpdate=true;
+  c=overlayCanvas.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,TW,TH); drawWaters(c,1.1,'rgba(90,160,215,.8)'); drawRoads(c,1.1); phongZone(c); overlayTex.needsUpdate=true;
+}
+paintTextures();
+
+/* ================= ĐỊA HÌNH ================= */
+const terrainGeo = new THREE.PlaneGeometry(WD, DD, W-1, H-1); terrainGeo.rotateX(-Math.PI/2);
+function updateTerrainHeights(){ const p=terrainGeo.attributes.position;
+  for(let j=0;j<H;j++)for(let i=0;i<W;i++){const k=j*W+i; p.setY(k, yOf(HM[k]));}
+  p.needsUpdate=true; terrainGeo.computeVertexNormals(); }
+updateTerrainHeights();
+const terrain = new THREE.Mesh(terrainGeo, new THREE.MeshStandardMaterial({map:terrainTex, roughness:.95, metalness:0}));
+terrain.receiveShadow = true; terrain.castShadow = true;
+function skirt(){ const g=new THREE.BufferGeometry(); const v=[]; const push=(a,b)=>{v.push(a.x,a.y,a.z,b.x,b.y,b.z,b.x,-3,b.z, a.x,a.y,a.z,b.x,-3,b.z,a.x,-3,a.z);};
+  const P=(i,j)=>new THREE.Vector3(-WD/2+i/(W-1)*WD, yOf(HM[j*W+i]), -DD/2+j/(H-1)*DD);
+  for(let i=0;i<W-1;i++){push(P(i+1,0),P(i,0));push(P(i,H-1),P(i+1,H-1));}
+  for(let j=0;j<H-1;j++){push(P(0,j),P(0,j+1));push(P(W-1,j+1),P(W-1,j));}
+  g.setAttribute('position',new THREE.Float32BufferAttribute(v,3)); g.computeVertexNormals(); return g; }
+const skirtMat = new THREE.MeshStandardMaterial({color:0x15584F, roughness:1, side:THREE.DoubleSide});
+let terrainSkirt = new THREE.Mesh(skirt(), skirtMat);
+const terrainGroup = new THREE.Group(); terrainGroup.add(terrain, terrainSkirt); scene.add(terrainGroup);
+const lakeTex = new THREE.CanvasTexture((()=>{const c=document.createElement('canvas');c.width=LW;c.height=LH;const x=c.getContext('2d');x.drawImage(lakeImg,0,0);return c;})());
+const water = new THREE.Mesh(new THREE.PlaneGeometry(WD,DD).rotateX(-Math.PI/2),
+  new THREE.MeshStandardMaterial({color:0x8EC4EE, transparent:true, opacity:.92, alphaMap:lakeTex, roughness:.3, metalness:0, depthWrite:false}));
+water.renderOrder = 2; scene.add(water);
+
+/* ================= CẮT LỚP ================= */
+const STEP = 50, LEVELS = [];
+for (let t=Math.ceil((HMIN+15)/STEP)*STEP; t<=HMAX-10; t+=STEP) LEVELS.push(t);
+// giấy – kem – vàng – xanh rừng (Hương Vị Hòa Bình), nội suy liên tục theo độ cao
+const plateStops=['#FBF4E3','#F6E7C9','#EFCB8F','#C9C08A','#8FAE86','#5E8C74','#2F6D5E','#15584F'].map(c=>new THREE.Color(c));
+const plateColors = LEVELS.map((_,k)=>{const u=k/Math.max(1,LEVELS.length-1)*(plateStops.length-1), i=Math.min(plateStops.length-2,Math.floor(u)); return plateStops[i].clone().lerp(plateStops[i+1],u-i);});
+// mỗi 100 m sẫm hơn một chút để đọc cao độ
+LEVELS.forEach((l,k)=>{ if(l%100===0) plateColors[k].multiplyScalar(.93); });
+const layerGroup = new THREE.Group(); scene.add(layerGroup);
+const plates = [];
+const gridToShapeXY = (x,y)=>[-WD/2+(x-.5)/(W-1)*WD, DD/2-(y-.5)/(H-1)*DD];
+function polysToShapes(mp, minArea=0.6){
+  const shapes=[];
+  for(const poly of mp.coordinates){
+    const outer=poly[0].map(([x,y])=>new THREE.Vector2(...gridToShapeXY(x,y)));
+    if(Math.abs(THREE.ShapeUtils.area(outer))<minArea) continue;
+    const s=new THREE.Shape(outer);
+    for(let r=1;r<poly.length;r++){const hole=poly[r].map(([x,y])=>new THREE.Vector2(...gridToShapeXY(x,y))); if(Math.abs(THREE.ShapeUtils.area(hole))>minArea*.5) s.holes.push(new THREE.Path(hole));}
+    shapes.push(s);
+  }
+  return shapes;
+}
+function topDownUV(geo){ const p=geo.attributes.position, uv=new Float32Array(p.count*2);
+  for(let k=0;k<p.count;k++){uv[k*2]=(p.getX(k)+WD/2)/WD; uv[k*2+1]=1-(p.getZ(k)+DD/2)/DD;}
+  geo.setAttribute('uv',new THREE.BufferAttribute(uv,2)); }
+const BASE_M = Math.floor(HMIN/100)*100;
+{
+  let vals = Float64Array.from(HM);
+  // làm mượt 2 lượt (chỉ cho cắt lớp) để mép lớp gọn, bớt nhiễu SRTM
+  for(let pass=0;pass<2;pass++){ const o=new Float64Array(vals.length);
+    for(let j=0;j<H;j++)for(let i=0;i<W;i++){let s=0,n=0;for(let b=-1;b<=1;b++)for(let a=-1;a<=1;a++){const x=i+a,y=j+b;if(x>=0&&y>=0&&x<W&&y<H){s+=vals[y*W+x];n++;}}o[j*W+i]=s/n;}
+    vals=o; }
+  const res = contours().size([W,H]).smooth(true).thresholds(LEVELS)(vals);
+  const baseGeo = new THREE.BoxGeometry(WD, 1, DD); baseGeo.translate(0,.5,0); topDownUV(baseGeo);
+  const base = new THREE.Mesh(baseGeo, new THREE.MeshStandardMaterial({color:0xFBF4E3, map:overlayTex, roughness:.9}));
+  base.receiveShadow=true; base.castShadow=true; base.userData={level:-1, bottom:0, thick:LEVELS[0]-STEP*.5, base:true};
+  layerGroup.add(base); plates.push(base);
+  res.forEach((mp,k)=>{
+    const shapes=polysToShapes(mp); if(!shapes.length) return;
+    const geo=new THREE.ExtrudeGeometry(shapes,{depth:1,bevelEnabled:false,curveSegments:1});
+    geo.rotateX(-Math.PI/2); topDownUV(geo);
+    const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:plateColors[k], map:overlayTex, roughness:.8}));
+    m.castShadow=true; m.receiveShadow=true;
+    m.userData={level:k, bottom:LEVELS[k]-STEP*.5, thick:STEP};
+    layerGroup.add(m); plates.push(m);
+  });
+  const lakeVals=new Float64Array(LW*LH); for(let k=0;k<LW*LH;k++) lakeVals[k]=lakeData[k];
+  const lr=contours().size([LW,LH]).smooth(true).thresholds([.5])(lakeVals)[0];
+  const lshapes=[]; for(const poly of lr.coordinates){const o=poly[0].map(([x,y])=>new THREE.Vector2(-WD/2+x/LW*WD, DD/2-y/LH*DD)); if(Math.abs(THREE.ShapeUtils.area(o))>.15){const s=new THREE.Shape(o); for(let r=1;r<poly.length;r++) s.holes.push(new THREE.Path(poly[r].map(([x,y])=>new THREE.Vector2(-WD/2+x/LW*WD, DD/2-y/LH*DD)))); lshapes.push(s);}}
+  const lg=new THREE.ExtrudeGeometry(lshapes,{depth:1,bevelEnabled:false,curveSegments:1}); lg.rotateX(-Math.PI/2);
+  const lakePlate=new THREE.Mesh(lg,new THREE.MeshStandardMaterial({color:0x7FBCE8,roughness:.4,metalness:0}));
+  lakePlate.userData={level:-1, lake:true}; lakePlate.receiveShadow=true;
+  layerGroup.add(lakePlate); plates.push(lakePlate);
+}
+const lakeLevelIdx = LEVELS.filter(l=>l<=LAKE_M).length;   // số tầng dưới mặt hồ
+function layoutPlates(intro=1){
+  plates.forEach(m=>{const u=m.userData; const lvl=u.level+1;
+    const dropT=Math.max(0,Math.min(1,(intro - lvl*0.07)/0.35));
+    const ease=1-Math.pow(1-dropT,3), lift=(1-ease)*60;
+    if(u.lake){ m.position.y = (lakeLevelIdx? yOf(LEVELS[lakeLevelIdx-1]+STEP*.5) : yOf(LEVELS[0]-STEP*.5)) + lift; m.scale.y=yOf(6); }
+    else if(u.base){ m.position.y = lift; m.scale.y = yOf(u.thick); }
+    else { m.position.y = yOf(u.bottom) + lift; m.scale.y = yOf(u.thick); }
+    m.visible = dropT>0;
+  });
+}
+
+/* ================= BỀ MẶT ================= */
+let mode='layers';
+function surfaceY(lat,lon){ const h=hAt(lat,lon);
+  if(mode==='terrain') return yOf(h);
+  let top=yOf(LEVELS[0]-STEP*.5);
+  for(let k=0;k<LEVELS.length;k++){ if(h>=LEVELS[k]) top=yOf(LEVELS[k]+STEP*.5); }
+  return top; }
+const waterY = ()=> mode==='terrain'? yOf(LAKE_M) : (lakeLevelIdx? yOf(LEVELS[lakeLevelIdx-1]+STEP*.5) : yOf(LEVELS[0]-STEP*.5))+yOf(6);
+
+/* ================= RỪNG PHONG HƯƠNG ================= */
+// Thân trụ thẳng vỏ trắng đục, cành chếch lên, tán hình trứng nhọn ngọn; một phần mọc ngập nước ven hồ.
+const trees=[];
+{
+  const R=GEO.phong.r_km, kx=111.32*Math.cos(latC*Math.PI/180), ky=110.57; let tries=0;
+  while(trees.length<(MOBILE?620:900) && tries<40000){ tries++;
+    const a=rnd()*Math.PI*2, r=Math.sqrt(rnd())*R*1.25;
+    const lat=GEO.phong.lat+Math.sin(a)*r/ky, lon=GEO.phong.lon+Math.cos(a)*r/kx;
+    const sd=shoreDist(lat,lon);
+    if(sd<-3) continue;                               // giữa hồ sâu
+    if(sd>0 && rnd()>Math.exp(-sd/4.5)) continue;     // thưa dần khi xa bờ
+    if(sd<=0 && rnd()>.45) continue;
+    trees.push({lat,lon,drown:sd<=0,H:(1.15+rnd()*.7),t:rnd(),rot:rnd()*6.28,j:[rnd(),rnd(),rnd(),rnd(),rnd(),rnd()]});
+  }
+}
+const NT=trees.length, CL=6, BR=4;
+const trunkGeo=new THREE.CylinderGeometry(.55,1,1,7); trunkGeo.translate(0,.5,0);
+const brGeo=new THREE.CylinderGeometry(.4,1,1,4); brGeo.translate(0,.5,0);
+const clumpGeo=new THREE.IcosahedronGeometry(1,1);
+const barkMat=new THREE.MeshStandardMaterial({color:0xD9D0BF,roughness:.8});
+const crownMat=new THREE.MeshStandardMaterial({roughness:.75,flatShading:true});
+const trunks=new THREE.InstancedMesh(trunkGeo,barkMat,NT), branches=new THREE.InstancedMesh(brGeo,barkMat,NT*BR), crowns=new THREE.InstancedMesh(clumpGeo,crownMat,NT*CL);
+[trunks,branches,crowns].forEach(m=>{m.castShadow=true;m.receiveShadow=true;scene.add(m);});
+const CLUMP=[[0,.97,0,.13,1.45],[.09,.82,0,.17,1.3],[-.06,.8,.08,.16,1.3],[0,.66,-.1,.2,1.15],[.1,.6,.09,.19,1.1],[-.11,.55,-.02,.18,1.05]];
+const _m=new THREE.Matrix4(), _q=new THREE.Quaternion(), _s=new THREE.Vector3(), _p=new THREE.Vector3(), _e=new THREE.Euler(), _c=new THREE.Color();
+let month=3; const leafCols=LEAFC.map(c=>new THREE.Color(c));
+function layoutTrees(){
+  const mix=MONTHS[month].mix, cum=[]; mix.reduce((s,v,k)=>(cum[k]=s+v),0);
+  trees.forEach((t,i)=>{ const H=t.H, x=toX(t.lon), z=toZ(t.lat);
+    const y0 = t.drown ? waterY()-yOf(18) : surfaceY(t.lat,t.lon)-.05;
+    let k=cum.findIndex(v=>t.t<=v); if(k<0)k=4;
+    _p.set(x,y0,z); _q.setFromEuler(_e.set(0,t.rot,0)); _s.set(.045*H, H+(t.drown?yOf(18):0), .045*H); trunks.setMatrixAt(i,_m.compose(_p,_q,_s));
+    const top=y0+(t.drown?yOf(18):0);
+    for(let b=0;b<BR;b++){ _p.set(x,top+H*(.42+b*.11),z); _q.setFromEuler(_e.set(.75+t.j[b]*.2,t.rot+b*1.57,0,'YXZ')); _s.set(.016*H,H*(.22-b*.03),.016*H); branches.setMatrixAt(i*BR+b,_m.compose(_p,_q,_s)); }
+    const c=Math.cos(t.rot), s=Math.sin(t.rot), sc=k===4?0:1;
+    CLUMP.forEach(([ox,oy,oz,r,sy],q)=>{ _p.set(x+(ox*c-oz*s)*H, top+oy*H, z+(ox*s+oz*c)*H); _q.identity(); const rr=r*H*(.9+t.j[q]*.25)*sc; _s.set(rr,rr*sy,rr);
+      crowns.setMatrixAt(i*CL+q,_m.compose(_p,_q,_s)); let kk=k; if(k>0&&k<4&&t.j[q]<.3) kk=k-1;
+      const hsl={}; _c.copy(leafCols[kk]).getHSL(hsl); _c.setHSL(hsl.h+(t.j[q]-.5)*.03,hsl.s,Math.min(1,Math.max(0,hsl.l+(t.j[q]-.5)*.12))); crowns.setColorAt(i*CL+q,_c); });
+  });
+  trunks.instanceMatrix.needsUpdate=branches.instanceMatrix.needsUpdate=crowns.instanceMatrix.needsUpdate=true; crowns.instanceColor.needsUpdate=true;
+}
+// lá rơi
+const LC=MOBILE?160:300; const lgeo=new THREE.BufferGeometry(); const lpos=new Float32Array(LC*3), lcol=new Float32Array(LC*3), ldat=[];
+function leafOutline(n){const pts=[],lobes=[[-Math.PI/2,1],[-Math.PI/2-1.25,.78],[-Math.PI/2+1.25,.78]];for(let i=0;i<n;i++){const th=-Math.PI/2+i/n*Math.PI*2;let r=.44;for(const[c,L]of lobes){const d=Math.atan2(Math.sin(th-c),Math.cos(th-c));r=Math.max(r,L*Math.exp(-Math.pow(Math.abs(d)/.58,1.15)))}const db=Math.atan2(Math.sin(th-Math.PI/2),Math.cos(th-Math.PI/2));r-=.1*Math.exp(-Math.pow(db/.3,2));pts.push([Math.cos(th)*r,Math.sin(th)*r])}return pts}
+const leafTex=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');x.fillStyle='#fff';x.beginPath();leafOutline(80).forEach(([a,b],k)=>x[k?'lineTo':'moveTo'](32+a*27,35+b*27));x.closePath();x.fill();return new THREE.CanvasTexture(c);})();
+for(let i=0;i<LC;i++){ldat.push({t:trees[Math.floor(rnd()*NT)],v:.12+rnd()*.25,ph:rnd()*6,y:rnd()});}
+lgeo.setAttribute('position',new THREE.BufferAttribute(lpos,3)); lgeo.setAttribute('color',new THREE.BufferAttribute(lcol,3));
+const leaves=new THREE.Points(lgeo,new THREE.PointsMaterial({size:.5,map:leafTex,vertexColors:true,alphaTest:.5,transparent:true})); scene.add(leaves);
+function colorLeaves(){ ldat.forEach((l,i)=>{const c=leafCols[[2,3,3,1][i%4]]; lcol[i*3]=c.r;lcol[i*3+1]=c.g;lcol[i*3+2]=c.b;}); lgeo.attributes.color.needsUpdate=true; }
+colorLeaves();
+
+/* ================= THUYỀN ================= */
+const boatGroup=new THREE.Group(); scene.add(boatGroup);
+let boatCurve=null, boatLine=null;
+const boat=new THREE.Group();
+{ const hull=new THREE.Mesh(new THREE.BoxGeometry(.5,.22,1.5),new THREE.MeshStandardMaterial({color:0xFBF4E3,roughness:.5})); hull.position.y=.11; hull.castShadow=true;
+  const bow=new THREE.Mesh(new THREE.ConeGeometry(.25,.5,4),new THREE.MeshStandardMaterial({color:0xFBF4E3})); bow.rotation.x=Math.PI/2; bow.rotation.y=Math.PI/4; bow.position.set(0,.11,1); bow.scale.set(1,1,.45);
+  const roof=new THREE.Mesh(new THREE.BoxGeometry(.56,.06,.8),new THREE.MeshStandardMaterial({color:0xC44125})); roof.position.set(0,.55,-.15);
+  const p1=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.32,4),new THREE.MeshStandardMaterial({color:0x1E1813})); p1.position.set(.24,.38,.2); const p2=p1.clone(); p2.position.x=-.24; const p3=p1.clone(); p3.position.z=-.5; const p4=p2.clone(); p4.position.z=-.5;
+  const vest=new THREE.Mesh(new THREE.BoxGeometry(.4,.14,.5),new THREE.MeshStandardMaterial({color:0xE8812B})); vest.position.set(0,.29,-.1);
+  boat.add(hull,bow,roof,p1,p2,p3,p4,vest); boat.scale.setScalar(1.1); }
+const wake=new THREE.Mesh(new THREE.RingGeometry(.6,.9,32).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.4,depthWrite:false}));
+boatGroup.add(boat,wake);
+function buildBoat(){
+  if(boatLine){boatGroup.remove(boatLine);boatLine.geometry.dispose();}
+  const y=waterY()+.08;
+  boatCurve=new THREE.CatmullRomCurve3(GEO.boat.map(([la,lo])=>new THREE.Vector3(toX(lo),y,toZ(la))),true,'catmullrom',.5);
+  const g=new THREE.BufferGeometry().setFromPoints(boatCurve.getSpacedPoints(240));
+  boatLine=new THREE.Line(g,new THREE.LineDashedMaterial({color:0xFBF4E3,dashSize:.7,gapSize:.5,transparent:true,opacity:.95})); boatLine.computeLineDistances(); boatGroup.add(boatLine);
+}
+
+/* ================= ĐIỆN GIÓ ================= */
+const turbines=[], windGroup=new THREE.Group(); scene.add(windGroup);
+const towerMat=new THREE.MeshStandardMaterial({color:0xF4F1EA,roughness:.5});
+// 65 tua-bin theo vị trí thật trên OpenStreetMap (power=generator, nguồn gió)
+GEO.wind.forEach(([la,lo])=>{ const g=new THREE.Group(); g.userData={la,lo};
+  const tw=new THREE.Mesh(new THREE.CylinderGeometry(.05,.1,3.2,8),towerMat); tw.position.y=1.6; tw.castShadow=true; g.add(tw);
+  const hub=new THREE.Group(); hub.position.set(0,3.2,.1);
+  for(let k=0;k<3;k++){const bl=new THREE.Mesh(new THREE.BoxGeometry(.07,1.3,.025),towerMat); bl.position.y=.65; const arm=new THREE.Group(); arm.rotation.z=k*2.094; arm.add(bl); hub.add(arm);}
+  hub.rotation.z=rnd()*6; g.add(hub); g.rotation.y=.5; windGroup.add(g); turbines.push(hub); });
+function layoutWind(){ windGroup.children.forEach(g=>g.position.set(toX(g.userData.lo),surfaceY(g.userData.la,g.userData.lo),toZ(g.userData.la))); }
+
+/* ================= XE CỘ ================= */
+// Xe chạy trên đúng các tuyến QL9, QL9E, đường HCM nhánh Tây, ĐT586/587 lấy từ OpenStreetMap
+const traffic={show:true, lanes:[], cars:null, n:0};
+{
+  const ways=GEO.roads.filter(r=>r.hw==='trunk'||r.hw==='secondary');
+  const lanes=[];
+  for(const r of ways){ const pts=r.pts.map(([la,lo])=>({la,lo,x:toX(lo),z:toZ(la)})); let L=0; const segs=[];
+    for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],dd=Math.hypot(b.x-a.x,b.z-a.z); if(dd<1e-6) continue; segs.push({a,b,d:dd,L}); L+=dd;}
+    if(L<6) continue; lanes.push({segs,L,hw:r.hw,ref:r.ref}); }
+  const per=l=>Math.max(2,Math.round(l.L/(l.hw==='trunk'?5:8)));
+  const list=[]; lanes.forEach((l,li)=>{ for(let k=0;k<per(l);k++) list.push({li, off:rnd(), dir:rnd()<.5?1:-1, sp:(l.hw==='trunk'?.55:.4)*(.75+rnd()*.5), truck:rnd()<(l.ref.includes('9')?.4:.2)}); });
+  const geo=new THREE.BoxGeometry(1,1,1); geo.translate(0,.5,0);
+  const mesh=new THREE.InstancedMesh(geo,new THREE.MeshStandardMaterial({roughness:.4,emissive:0x3a2a18,emissiveIntensity:.6}),list.length); mesh.castShadow=true;
+  const cc=[new THREE.Color(0xFBF4E3),new THREE.Color(0xF6E7C9),new THREE.Color(0xC44125),new THREE.Color(0x2A7A6B)], ct=[new THREE.Color(0xEFCB8F),new THREE.Color(0xC44125)];
+  list.forEach((v,i)=>mesh.setColorAt(i,v.truck?ct[i%2]:cc[i%4])); mesh.instanceColor.needsUpdate=true;
+  scene.add(mesh); traffic.lanes=lanes; traffic.list=list; traffic.cars=mesh;
+  // quầng sáng đèn xe để nhìn thấy dòng xe từ xa
+  const gt=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');const g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.25,'rgba(255,240,200,.85)');g.addColorStop(1,'rgba(255,220,160,0)');x.fillStyle=g;x.fillRect(0,0,64,64);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;})();
+  const gg=new THREE.BufferGeometry(); gg.setAttribute('position',new THREE.BufferAttribute(new Float32Array(list.length*3),3));
+  const gc=new Float32Array(list.length*3); list.forEach((v,i)=>{const c=new THREE.Color(v.truck?0xEFCB8F:0xFFF3D6); gc.set([c.r,c.g,c.b],i*3);}); gg.setAttribute('color',new THREE.BufferAttribute(gc,3));
+  traffic.glow=new THREE.Points(gg,new THREE.PointsMaterial({size:2.2,map:gt,vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.85}));
+  scene.add(traffic.glow);
+}
+const _up=new THREE.Vector3(0,1,0);
+function layoutTraffic(t){
+  const {lanes,list,cars}=traffic; if(!cars) return;
+  list.forEach((v,i)=>{ const l=lanes[v.li]; let s=((v.off+t*v.sp*v.dir/l.L*6)%1+1)%1*l.L;
+    let sg=l.segs[l.segs.length-1]; for(const q of l.segs){ if(s<=q.L+q.d){sg=q;break;} }
+    const u=Math.max(0,Math.min(1,(s-sg.L)/sg.d)), x=sg.a.x+(sg.b.x-sg.a.x)*u, z=sg.a.z+(sg.b.z-sg.a.z)*u;
+    const la=sg.a.la+(sg.b.la-sg.a.la)*u, lo=sg.a.lo+(sg.b.lo-sg.a.lo)*u;
+    const ang=Math.atan2(sg.b.x-sg.a.x, sg.b.z-sg.a.z)+(v.dir<0?Math.PI:0);
+    const side=.34*v.dir; _p.set(x+Math.cos(ang)*side, surfaceY(la,lo)+.04, z-Math.sin(ang)*side);
+    _q.setFromAxisAngle(_up,ang); v.truck? _s.set(.62,.66,1.6) : _s.set(.5,.38,.95);
+    cars.setMatrixAt(i,_m.compose(_p,_q,_s)); traffic.glow.geometry.attributes.position.setXYZ(i,_p.x,_p.y+.9,_p.z); });
+  cars.instanceMatrix.needsUpdate=true; traffic.glow.geometry.attributes.position.needsUpdate=true;
+}
+
+/* ================= VÒNG SÓNG ================= */
+const rings=[];
+for(const c of [{lat:GEO.phong.lat,lon:GEO.phong.lon},{lat:POIS[1].lat,lon:POIS[1].lon}]) for(let r=0;r<2;r++){ const m=new THREE.Mesh(new THREE.RingGeometry(.9,1.15,48).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:C.do,transparent:true,opacity:.6,side:THREE.DoubleSide,depthWrite:false})); m.userData={c,ph:r*.5}; rings.push(m); scene.add(m); }
+function placeRings(){ rings.forEach(m=>{const c=m.userData.c; m.position.set(toX(c.lon),Math.max(surfaceY(c.lat,c.lon),waterY())+.2,toZ(c.lat));}); }
+
+/* ================= MÂY ================= */
+const cloudTex=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');
+  for(let k=0;k<14;k++){const r=40+rnd()*50,cx=60+rnd()*136,cy=90+rnd()*76;const g=x.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,256,256);}
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;})();
+const clouds=[];
+// tầng mây cao trải khắp vùng, tầng sương thấp trên mặt hồ và thung lũng; trôi theo gió tây nam – đông bắc
+for(let k=0;k<(MOBILE?22:34);k++){ const low=k%3===0; const s=new THREE.Sprite(new THREE.SpriteMaterial({map:cloudTex,transparent:true,opacity:low?.4:.7,depthWrite:false}));
+  const sc=low?(28+rnd()*30):(30+rnd()*40); s.scale.set(sc,sc*(low?.28:.55),1);
+  const la=low?(rnd()<.5? GEO.phong.lat+(rnd()-.5)*.04 : DEM.lat0+rnd()*(DEM.lat1-DEM.lat0)) : DEM.lat0+rnd()*(DEM.lat1-DEM.lat0);
+  const lo=low?(rnd()<.5? GEO.phong.lon+(rnd()-.5)*.05 : DEM.lon0+rnd()*(DEM.lon1-DEM.lon0)) : DEM.lon0+rnd()*(DEM.lon1-DEM.lon0);
+  s.userData={x:toX(lo), z:toZ(la), sp:.6+rnd()*.8, ph:rnd()*6, low, alt: low? LAKE_M+70+rnd()*60 : 1250+rnd()*450, base:low?.4:.7};
+  s.renderOrder=3; scene.add(s); clouds.push(s);}
+
+/* ================= NHÃN ================= */
+const labelsEl=document.getElementById('labels');
+const LABELS=[];
+function addLabel({lat,lon,html,cls='',onClick,lift=0,prio=5,key}){
+  const el=document.createElement('div'); el.className='lb '+cls; el.innerHTML=html+(cls.includes('road')?'':'<div class="stem"></div>');
+  if(onClick) el.addEventListener('click',e=>{e.stopPropagation();onClick();});
+  labelsEl.appendChild(el); const o={el,lat,lon,lift,prio,sz:null,key}; LABELS.push(o); LABELS.sort((a,b)=>a.prio-b.prio); return o;
+}
+POIS.forEach(p=>{const o=addLabel({lat:p.lat,lon:p.lon,lift:p.big?2.6:1.2,cls:p.big?'big':(p.id==='ben'?'warn':'zone'),prio:p.big?0:(p.id==='ben'?1:(p.cat==='stay'?5:3)),key:p.id,
+  html:p.big?`<div class="tag">${p.short}</div>`:`<div class="tag"><i style="background:${CAT[p.cat].color}"></i><span>${p.short}</span></div>`,onClick:()=>focusPoi(p)}); o.cat=p.cat;});
+ROAD_LABELS.forEach(([la,lo,t],k)=>addLabel({lat:la,lon:lo,cls:'road',prio:8,key:'r'+k,html:`<div class="tag">${t}</div>`}));
+GEO.places.filter(p=>p.place==='town'||p.place==='village').forEach(p=>addLabel({lat:p.lat,lon:p.lon,cls:'road place',prio:10,key:'pl',html:`<div class="tag">${p.name}</div>`}));
+let hiddenCats=new Set();
+const v3=new THREE.Vector3();
+let showLabels=true, tourKeys=null;
+function updateLabels(){
+  const w=innerWidth,h=innerHeight, placed=[], camDist=camera.position.distanceTo(controls.target);
+  const pr=document.getElementById('panel').getBoundingClientRect(); const panelOn=w>=760 && !document.body.classList.contains('touring');
+  const tb=document.getElementById('tour').getBoundingClientRect(); const tourOn=document.body.classList.contains('touring');
+  const dr=tourOn?null:document.getElementById('dock').getBoundingClientRect(); const topH=document.querySelector('.top').getBoundingClientRect().bottom;
+  for(const o of LABELS){
+    const road=o.el.classList.contains('road');
+    v3.set(toX(o.lon),Math.max(surfaceY(o.lat,o.lon),inLake(o.lat,o.lon)?waterY():0)+o.lift+(road?0.8:0),toZ(o.lat)).project(camera);
+    let vis=showLabels && v3.z<1 && Math.abs(v3.x)<1.05 && Math.abs(v3.y)<1.05;
+    if(MOBILE && !tourKeys && camDist>230 && (road || o.cat==='stay')) vis=false;
+    if(tourKeys && !tourKeys.includes(o.key)) vis=false;
+    if(o.cat && hiddenCats.has(o.cat)) vis=false;
+    const sx=(v3.x*.5+.5)*w, sy=(-v3.y*.5+.5)*h;
+    let dot=false;
+    if(vis){
+      if(!o.sz){o.el.classList.remove('dot');const r=o.el.getBoundingClientRect(); o.sz=[Math.max(20,r.width),Math.max(16,r.height)];}
+      const hit=(a,b)=>a[0]<b[2]&&a[2]>b[0]&&a[1]<b[3]&&a[3]>b[1];
+      const box=(bw,bh)=>{const x0=sx-bw/2,y0=road?sy-bh/2:sy-bh;return [x0-3,y0-3,x0+bw+3,y0+bh+3];};
+      const ok=R=>!placed.some(p=>hit(p,R)) && !hit(R,[0,0,w,topH]) && !(panelOn&&hit(R,[pr.left,pr.top,pr.right,pr.bottom])) && !(tourOn&&hit(R,[tb.left,tb.top,tb.right,tb.bottom])) && !(dr&&hit(R,[dr.left,dr.top,dr.right,dr.bottom])) && R[0]>=0 && R[2]<=w && R[1]>=0;
+      let R=box(...o.sz);
+      if(!ok(R)){ if(o.el.classList.contains('zone')){R=box(24,40);dot=true;if(!ok(R))vis=false;} else vis=false; }
+      if(vis) placed.push(R);
+    }
+    o.el.classList.toggle('dot',dot); o.el.classList.toggle('hide',!vis);
+    if(vis) o.el.style.transform=`translate(${sx}px,${sy}px) translate(-50%,${road?'-50%':'-100%'})`;
+  }
+}
+
+/* ================= UI ================= */
+const zl=document.getElementById('zl');
+POIS.forEach(p=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<i style="background:${CAT[p.cat].color}"></i>${p.name}<small>${CAT[p.cat].label}</small>`;b.onclick=()=>focusPoi(p);b.dataset.id=p.id;b.dataset.cat=p.cat;zl.appendChild(b);});
+const catsEl=document.getElementById('cats');
+Object.entries(CAT).forEach(([k,c])=>{const b=document.createElement('button');b.type='button';b.className='on';b.innerHTML=`<i style="background:${c.color}"></i>${c.label} <small>${POIS.filter(p=>p.cat===k).length}</small>`;
+  b.onclick=()=>{ const off=!hiddenCats.has(k); off?hiddenCats.add(k):hiddenCats.delete(k); b.classList.toggle('on',!off); b.classList.toggle('off',off);
+    zl.querySelectorAll('button').forEach(x=>x.hidden=hiddenCats.has(x.dataset.cat)); };
+  catsEl.appendChild(b);});
+const card=document.getElementById('card');
+function openCard(p){
+  document.getElementById('ck').style.background=CAT[p.cat].color; document.getElementById('ckt').textContent=CAT[p.cat].label;
+  document.getElementById('ct').textContent=p.name; document.getElementById('cd').textContent=p.desc;
+  const cw=document.getElementById('cw'); cw.hidden=!p.warn; cw.innerHTML=(p.warn||[]).map(s=>`<li>${s}</li>`).join('');
+  document.getElementById('cc').textContent=`${p.lat.toFixed(5)}°B, ${p.lon.toFixed(5)}°Đ · cao ~${Math.round(inLake(p.lat,p.lon)?LAKE_M:hAt(p.lat,p.lon))} m`;
+  document.getElementById('cmap').href=gmaps(p.lat,p.lon); card.classList.add('show'); document.body.classList.add('card-on');
+  zl.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===p.id));
+}
+document.getElementById('cx').onclick=()=>{card.classList.remove('show');document.body.classList.remove('card-on');zl.querySelectorAll('button').forEach(b=>b.classList.remove('on'));};
+let fly=null;
+function flyRaw(p1,t1,ms=1600){ fly={s:performance.now(),ms,p0:camera.position.clone(),t0:controls.target.clone(),p1:p1.clone(),t1:t1.clone()}; }
+function flyTo(tgt,dist=60,dirOverride){ const dir=(dirOverride||camera.position.clone().sub(controls.target)).normalize(); if(dir.y<.45){dir.y=.55;dir.normalize();} flyRaw(tgt.clone().add(dir.multiplyScalar(dist)),tgt); setRotate(false); }
+const at=(lat,lon,dy=0)=>new THREE.Vector3(toX(lon),Math.max(surfaceY(lat,lon),inLake(lat,lon)?waterY():0)+dy,toZ(lat));
+function focusPoi(p){ openCard(p); flyTo(at(p.lat,p.lon), p.big?(MOBILE?60:42):(MOBILE?70:52)); if(MOBILE) document.getElementById('panel').classList.remove('open'); }
+function setRotate(v){controls.autoRotate=v;document.getElementById('bRotate').classList.toggle('on',v);}
+function relayout(){ layoutTrees(); layoutWind(); buildBoat(); placeRings(); }
+function setMode(m){ mode=m; document.querySelectorAll('.modes button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+  terrainGroup.visible=water.visible=(m==='terrain'); layerGroup.visible=(m!=='terrain'); relayout(); }
+document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{ if(touring) stopTour(); setMode(b.dataset.mode); });
+const tog=(id,fn)=>{const b=document.getElementById(id);b.onclick=()=>{b.classList.toggle('on');fn(b.classList.contains('on'));};};
+let showPhong=true, showBoat=true;
+tog('bPhong',v=>{showPhong=v;});
+tog('bBoat',v=>{showBoat=v;});
+tog('bWind',v=>{windGroup.visible=v;});
+tog('bCars',v=>{traffic.show=v;});
+tog('bLabels',v=>{showLabels=v;});
+tog('bRotate',v=>{controls.autoRotate=v;});
+document.getElementById('bReset').onclick=()=>flyRaw(HOME.pos,HOME.tgt);
+document.getElementById('ptoggle').onclick=()=>document.getElementById('panel').classList.toggle('open');
+const ex=document.getElementById('ex');
+ex.oninput=()=>{EX=+ex.value;document.getElementById('exv').textContent=EX.toFixed(1)+'×';updateTerrainHeights();
+  terrainGroup.remove(terrainSkirt); terrainSkirt=new THREE.Mesh(skirt(),skirtMat); terrainGroup.add(terrainSkirt);
+  water.position.y=yOf(LAKE_M); relayout();};
+water.position.y=yOf(LAKE_M);
+const mIn=document.getElementById('month');
+function setMonth(i){ month=i; mIn.value=i; document.getElementById('mOut').textContent=MONTHS[i].m; document.getElementById('mNote').textContent=MONTHS[i].note; layoutTrees(); }
+mIn.oninput=()=>setMonth(+mIn.value);
+// bảng an toàn
+document.getElementById('rules').innerHTML=RULES.map(([n,b,s,hi])=>`<div class="rule${hi?' hi':''}"><div class="ic">${n}</div><div><b>${b}</b><span>${s}</span></div></div>`).join('');
+const sheet=document.getElementById('sheet');
+const openSheet=()=>{sheet.classList.add('show');document.getElementById('sheetX').focus();};
+document.getElementById('safeBtn').onclick=openSheet; document.getElementById('safeBtn2').onclick=openSheet;
+document.getElementById('sheetX').onclick=()=>sheet.classList.remove('show');
+sheet.addEventListener('click',e=>{if(e.target===sheet)sheet.classList.remove('show');});
+renderer.domElement.addEventListener('pointerdown',()=>{ if(!touring) fly=null; document.getElementById('hint').style.opacity=0;});
+function fit(){const w=innerWidth,h=innerHeight;camera.aspect=w/h;
+  if(w>=760) camera.setViewOffset(w,h,-Math.min(190,w*.13),0,w,h); else camera.setViewOffset(w,h,0,Math.round(h*.08),w,h);
+  camera.updateProjectionMatrix();renderer.setSize(w,h);LABELS.forEach(o=>o.sz=null);}
+addEventListener('resize',fit); fit();
+
+function countUp(){ document.querySelectorAll('[data-count]').forEach(el=>{const to=+el.dataset.count; const s=performance.now();
+  const f=()=>{const t=Math.min(1,(performance.now()-s)/1800), e=1-Math.pow(1-t,4); el.textContent=Math.round(to*e).toLocaleString('vi-VN'); if(t<1) requestAnimationFrame(f);}; f();}); }
+const bigNum=document.getElementById('bigNum');
+function showBig(val,label,suf=''){ const el=document.getElementById('bigNumV'); document.getElementById('bigNumL').textContent=label; bigNum.classList.add('on');
+  const s=performance.now(); const f=()=>{const t=Math.min(1,(performance.now()-s)/1600), e=1-Math.pow(1-t,4); el.textContent=Math.round(val*e).toLocaleString('vi-VN')+suf; if(t<1&&bigNum.classList.contains('on')) requestAnimationFrame(f);}; f(); }
+const hideBig=()=>bigNum.classList.remove('on');
+
+/* ================= DỊCH VỤ ================= */
+// Sửa thông tin liên hệ ở đây (không cần máy chủ: form soạn sẵn tin nhắn rồi mở Zalo / email / gọi điện)
+const CONTACT={name:'Mùa Phong Khe Sanh', phone:'0988886901', zalo:'https://zalo.me/0988886901', email:'khanhdesignvn@gmail.com'};
+const ICO={
+  tour:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 5.5 9 9l-3.5 1.5L7 7z" fill="currentColor"/></svg>',
+  boat:'<svg viewBox="0 0 16 16"><path d="M2 10h12l-2 3H4z" fill="currentColor"/><path d="M8 2v8M8 2l4 6H8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+  guide:'<svg viewBox="0 0 16 16"><circle cx="8" cy="4.5" r="2.6" fill="currentColor"/><path d="M2.5 14a5.5 5.5 0 0 1 11 0z" fill="currentColor"/></svg>',
+  photo:'<svg viewBox="0 0 16 16"><path d="M2 5h3l1-1.6h4L11 5h3v8H2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="8.8" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
+  car:'<svg viewBox="0 0 16 16"><path d="M2.5 9 4 5h8l1.5 4v3.5h-11z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5" cy="11" r="1.2" fill="currentColor"/><circle cx="11" cy="11" r="1.2" fill="currentColor"/></svg>',
+  stay:'<svg viewBox="0 0 16 16"><path d="M2 8 8 2.5 14 8M3.5 7v6.5h9V7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+  contact:'<svg viewBox="0 0 16 16"><path d="M3 2h3l1.5 3.5L6 7a8 8 0 0 0 3 3l1.5-1.5L14 10v3a1 1 0 0 1-1 1A11 11 0 0 1 2 3a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'
+};
+const SERVICES=[
+  {id:'tour', label:'Đặt tour', hot:true, h:'Tour rừng phong hương', p:'Tour 1 ngày hoặc 2 ngày 1 đêm từ Khe Sanh: thuyền ra rừng phong ngập nước, săn mây Cu Vơ, cà phê đồi và di tích Tà Cơn. Đẹp nhất giữa tháng 12 đến đầu tháng 1.',
+   inc:['Thuyền máy có người lái, áo phao cho cả đoàn','Hướng dẫn viên bản địa Vân Kiều – Pa Kô','Ăn trưa đặc sản, nước uống, bảo hiểm du lịch','Tùy chọn: xe đưa đón Đông Hà, Huế, Đà Nẵng']},
+  {id:'boat', label:'Thuê thuyền', h:'Thuê thuyền ra rừng phong', p:'Thuyền máy của người dân từ bến Km 13, chở 4–8 người mỗi chuyến, vòng qua nhánh hồ tây bắc tới các gốc phong ngập nước, khoảng 60–90 phút.',
+   inc:['Giá tính theo chuyến, thỏa thuận trước khi lên thuyền','Có áo phao; trẻ em và người không biết bơi vẫn đi được','Tránh ngày mưa giông, gió lớn trên mặt hồ','Hẹn giờ trước để chủ thuyền chờ sẵn ở bến']},
+  {id:'guide', label:'Thuê HDV', h:'Hướng dẫn viên bản địa', p:'Người dẫn đường quen lối mòn quanh hồ, cung trekking 14 km, điểm săn mây và chuyện kể về Khe Sanh – Đường 9.',
+   inc:['Dẫn trekking vòng hồ, leo Cu Vơ, lên Voi Mẹp nhiều ngày','Hỗ trợ khai báo khi cắm trại qua đêm ở xã biên giới','Nói tiếng Việt; một số hướng dẫn viên nói tiếng Anh','Giá theo ngày, theo nhóm']},
+  {id:'photo', label:'Chụp hình', h:'Chụp ảnh & quay flycam', p:'Thợ ảnh địa phương chụp bộ ảnh mùa lá phong, săn mây sáng sớm, điện gió và hồ Rào Quán; có flycam cho ảnh toàn cảnh rừng phong trên mặt nước.',
+   inc:['Gói cá nhân, cặp đôi, nhóm bạn, gia đình','Giao ảnh đã chỉnh trong 3–5 ngày','Thuê áo dài, trang phục Vân Kiều theo yêu cầu','Flycam chỉ bay ngoài khu vực cấm, đúng quy định biên giới']},
+  {id:'car', label:'Đặt xe', h:'Xe đưa đón & xe máy', p:'Xe 4–16 chỗ từ Đông Hà (~65 km), Huế (~150 km), Đà Nẵng (~250 km) lên Khe Sanh; xe máy, xe bán tải gầm cao cho đoạn đường đất xuống bến thuyền.',
+   inc:['Xe 4, 7, 16 chỗ có tài xế','Thuê xe máy theo ngày tại Khe Sanh','Xe gầm cao cho Cu Vơ, bến Km 13, đồi điện gió','Báo điểm đón và giờ khởi hành khi đặt']},
+  {id:'stay', label:'Lưu trú', h:'Homestay, farmstay, cắm trại', p:'Nghỉ ở farmstay, glamping ven QL9 hoặc homestay cộng đồng Chênh Vênh; lều trại ven hồ Rào Quán cho đêm ngắm sao và săn mây sáng sớm.',
+   inc:['Giữ phòng sớm mùa lá đỏ (T12–T1)','Lều, túi ngủ, bếp dã ngoại cho nhóm cắm trại','Homestay Vân Kiều: cơm lam, rượu cần, văn nghệ bản','Đêm trên hồ lạnh, mang áo ấm']},
+  {id:'contact', label:'Liên hệ', h:'Liên hệ Mùa Phong Khe Sanh', p:'Hỏi nhanh về mực nước hồ, tình trạng lá, thời tiết hay ghép đoàn. Trả lời trong giờ hành chính, nhanh nhất qua Zalo.',
+   inc:['Zalo / điện thoại: '+CONTACT.phone,'Email: '+CONTACT.email,'Tư vấn miễn phí lịch trình 1–3 ngày']}
+];
+const dock=document.getElementById('dock'), svc=document.getElementById('svc'), svcForm=document.getElementById('svcForm');
+let curSvc=null;
+SERVICES.forEach(s=>{const b=document.createElement('button');b.type='button';b.className=s.hot?'hot':'';b.innerHTML=ICO[s.id]+s.label;b.onclick=()=>openSvc(s);dock.appendChild(b);});
+function openSvc(s){ curSvc=s; document.getElementById('svcH').textContent=s.h; document.getElementById('svcP').textContent=s.p;
+  document.getElementById('svcInc').innerHTML=s.inc.map(x=>`<li>${x}</li>`).join(''); document.getElementById('svcEb').textContent='Dịch vụ · '+s.label;
+  svcForm.hidden=(s.id==='contact'); document.getElementById('svcTel').href='tel:'+CONTACT.phone.replace(/\s/g,'');
+  svc.classList.add('show'); document.body.classList.add('sheet-open'); if(MOBILE) document.getElementById('panel').classList.remove('open'); }
+function closeSvc(){ svc.classList.remove('show'); document.body.classList.remove('sheet-open'); }
+function svcText(){ const f=new FormData(svcForm); const d=f.get('date'); const dd=d?new Date(d+'T00:00').toLocaleDateString('vi-VN'):'(chưa chọn)';
+  return `Xin chào ${CONTACT.name}, tôi muốn ${curSvc.label.toLowerCase()}: ${curSvc.h}.\n- Họ tên: ${f.get('name')||'(chưa điền)'}\n- Điện thoại: ${f.get('phone')||'(chưa điền)'}\n- Ngày đi: ${dd}\n- Số người: ${f.get('n')||'?'}\n- Ghi chú: ${f.get('note')||'không'}\n(Gửi từ sa bàn 3D Mùa Phong Khe Sanh)`; }
+const toast=document.getElementById('toast'); let toastT;
+function showToast(s){ toast.textContent=s; toast.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>toast.classList.remove('on'),2600); }
+document.getElementById('svcZalo').onclick=async()=>{ const txt=curSvc.id==='contact'?`Xin chào ${CONTACT.name}, tôi cần tư vấn về rừng phong hương Khe Sanh.`:svcText();
+  try{ await navigator.clipboard.writeText(txt); showToast('Đã sao chép nội dung, dán vào Zalo để gửi'); }catch(e){ showToast('Mở Zalo để nhắn tin'); }
+  setTimeout(()=>window.open(CONTACT.zalo,'_blank','noopener'),500); };
+document.getElementById('svcMail').onclick=e=>{ const txt=curSvc.id==='contact'?'Xin chào, tôi cần tư vấn về rừng phong hương Khe Sanh.':svcText();
+  e.currentTarget.href=`mailto:${CONTACT.email}?subject=${encodeURIComponent('['+curSvc.label+'] '+curSvc.h)}&body=${encodeURIComponent(txt)}`; };
+document.getElementById('svcX').onclick=closeSvc; svc.addEventListener('click',e=>{if(e.target===svc)closeSvc();});
+// nút trong thẻ điểm đến: đặt tour tới điểm này
+document.getElementById('cbook').onclick=()=>{ const s=SERVICES[0]; openSvc(s); const n=svcForm.elements.note; if(n && !n.value) n.value='Muốn đi: '+document.getElementById('ct').textContent; };
+
+/* ================= TRÌNH CHIẾU ================= */
+let touring=false, step=0, stepStart=0, ride=null, monthAnim=null;
+const P=id=>POIS.find(p=>p.id===id);
+const STEPS=[
+  {eb:'Toàn cảnh', h:'Khe Sanh, miền Tây Quảng Trị', p:'Địa hình thật từ dữ liệu SRTM, cắt lớp mỗi 50 m: từ thung lũng Sê Pôn ở Lao Bảo (~200 m) lên hồ Rào Quán (~480 m) và các đỉnh điện gió.', dur:7500,
+   go(){ setMode('layers'); flyRaw(HOME.pos.clone().multiplyScalar(1.05),HOME.tgt,2200); setRotate(true); showBig(881,'mét · đỉnh Cu Vơ'); }, keys:['phong','ho','khesanh','cuvo','tacon','cuakhau']},
+  {eb:'Đường xá', h:'QL9 và đường HCM nhánh Tây', p:'QL9 nối Đông Hà – Khe Sanh – cửa khẩu Lao Bảo, xe tải và xe khách qua lại liên tục. Từ ngã ba Khe Sanh, đường HCM nhánh Tây đi lên phía bắc, men theo bờ tây hồ Rào Quán.', dur:8500,
+   go(){ hideBig(); setMode('terrain'); traffic.show=true; const t=at(16.628,106.69); flyRaw(t.clone().add(new THREE.Vector3(30,55,70)),t,2600); setRotate(false); }, keys:['khesanh','cuakhau','tacon','r0','r1','r2','r3','r5']},
+  {eb:'Đường vào', h:'Lên bến thuyền Km 13', p:'Khoảng 13 km từ trung tâm Khe Sanh theo đường HCM nhánh Tây, qua Tà Cơn, điện gió Hướng Tân và cây cô đơn. Đoạn cuối xuống bến là đường đất đỏ, trơn khi mưa.', dur:8500, warn:true,
+   go(){ setMode('terrain'); const t=at(16.69,106.69); flyRaw(t.clone().add(new THREE.Vector3(26,34,40)),t,2600); setRotate(false); }, keys:['tacon','caycodon','diengio','ben','r3']},
+  {eb:'Bắt buộc', h:'Vào rừng phong bằng thuyền', p:'Không có đường bộ tới các gốc phong ngập nước. Mặc áo phao, đi thuyền máy của người dân từ bến Km 13 vòng qua nhánh hồ tây bắc.', dur:12000, warn:true,
+   go(){ setMode('terrain'); ride={s:performance.now(),ms:11500}; setRotate(false); }, keys:['ben','phong']},
+  {eb:'Mùa lá', h:'Từ xanh sang đỏ', p:'Lá phong hương ba thùy ngả vàng từ tháng 10, đỏ đậm nhất cuối tháng 12 đến đầu tháng 1, rồi trút lá. Mùa đẹp chỉ kéo dài 2–3 tuần.', dur:9000,
+   go(){ setMode('terrain'); const t=at(GEO.phong.lat,GEO.phong.lon); flyRaw(t.clone().add(new THREE.Vector3(-14,13,18)),t,2400); setRotate(true); monthAnim={s:performance.now(),from:0,to:4,ms:7000}; }, keys:['phong','ben']},
+  {eb:'Săn mây & gió', h:'Cu Vơ và 65 tua-bin', p:'Các cụm điện gió trên đồi quanh hồ và Khe Sanh. Lên đỉnh Cu Vơ hoặc đồi săn mây Hướng Tân trước 6 giờ sáng để thấy biển mây.', dur:8000,
+   go(){ monthAnim=null; setMonth(3); setMode('terrain'); const t=at(16.68,106.68); flyRaw(t.clone().add(new THREE.Vector3(-30,30,34)),t,2600); setRotate(false); }, keys:['cuvo','santan','diengio','ho']},
+  {eb:'Phía bắc', h:'Hướng Phùng – Tà Puồng – Voi Mẹp', p:'Theo đường HCM nhánh Tây lên phía bắc: bản Chênh Vênh, thác Tà Puồng ở Hướng Lập, và đỉnh Voi Mẹp 1.707 m, nóc nhà Quảng Trị.', dur:8500,
+   go(){ setMode('layers'); const t=at(16.80,106.64); flyRaw(t.clone().add(new THREE.Vector3(60,110,120)),t,2800); setRotate(false); }, keys:['huongphung','chenhvenh','thaccv','tapuong','voimep','phong']},
+  {eb:'Ký ức', h:'Tà Cơn – Khe Sanh – Làng Vây', p:'Di tích chiến dịch Đường 9 – Khe Sanh 1968 nằm dọc QL9 và đường HCM nhánh Tây, tới nhà tù Lao Bảo sát biên giới.', dur:7500,
+   go(){ setMode('layers'); const t=at(16.62,106.67); flyRaw(t.clone().add(new THREE.Vector3(10,80,90)),t,2600); setRotate(false); }, keys:['tacon','tuongdai','langvay','laobao','cuakhau']},
+  {eb:'Nghỉ chân', h:'Cà phê đồi và farmstay', p:'Cụm quán view thung lũng trên QL9 phía đông Khe Sanh, vườn và farmstay quanh Tà Cơn. Thử cà phê Khe Sanh trồng trên đất đỏ bazan.', dur:7500,
+   go(){ setMode('terrain'); const t=at(16.642,106.74); flyRaw(t.clone().add(new THREE.Vector3(20,26,32)),t,2600); setRotate(false); }, keys:['homi','retro','vuonnd','valley','trosie','khesanh']},
+  {eb:'Trước khi đi', h:'8 lưu ý an toàn', p:'Áo phao suốt hành trình, chỉ đi thuyền có người lái, không bơi hay lội ra gốc phong, không đi khi mưa giông, đi đúng lối mòn. Bấm “An toàn” để xem đủ.', dur:9000, warn:true,
+   go(){ setMode('layers'); flyRaw(HOME.pos,HOME.tgt,2400); setRotate(true); }, keys:['phong','ben']}
+];
+const tBar=document.getElementById('tBar'); STEPS.forEach(()=>{const i=document.createElement('i');i.appendChild(document.createElement('b'));tBar.appendChild(i);});
+function goStep(i){ step=(i+STEPS.length)%STEPS.length; stepStart=performance.now(); const s=STEPS[step];
+  document.getElementById('tEb').textContent=`${String(step+1).padStart(2,'0')} / ${String(STEPS.length).padStart(2,'0')} · ${s.eb}`;
+  document.getElementById('tH').textContent=s.h; document.getElementById('tP').textContent=s.p; document.getElementById('tBox').classList.toggle('warn',!!s.warn);
+  tourKeys=s.keys; ride=null; monthAnim=null; s.go(); }
+function startTour(){ touring=true; document.body.classList.add('touring'); card.classList.remove('show'); sheet.classList.remove('show'); closeSvc(); document.getElementById('panel').classList.remove('open'); goStep(0); }
+function stopTour(){ touring=false; ride=null; monthAnim=null; tourKeys=null; hideBig(); document.body.classList.remove('touring'); }
+document.getElementById('playBtn').onclick=()=>touring?stopTour():startTour();
+document.getElementById('tStop').onclick=stopTour;
+document.getElementById('tNext').onclick=()=>goStep(step+1);
+document.getElementById('tPrev').onclick=()=>goStep(step-1);
+addEventListener('keydown',e=>{ if(e.key==='Escape'){sheet.classList.remove('show'); closeSvc(); if(touring) stopTour();} if(!touring) return; if(e.key==='ArrowRight')goStep(step+1); if(e.key==='ArrowLeft')goStep(step-1); });
+
+/* ================= VÒNG LẶP ================= */
+setMode('terrain'); setMonth(3);
+const clock=new THREE.Clock(); const START=performance.now(); let introT=0, introFlown=false; const needle=document.getElementById('needle');
+const tmpA=new THREE.Vector3(), tmpB=new THREE.Vector3(), UP=new THREE.Vector3(0,1,0);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tick(){
+  const dt=Math.min(clock.getDelta(),.25), t=clock.elapsedTime, now=performance.now();
+  introT=Math.min((now-START)/2400,1.6);
+  if(!introFlown){ introFlown=true; flyRaw(HOME.pos,HOME.tgt,4200); }
+  if(mode!=='terrain') layoutPlates(introT);
+  if(mode!=='terrain' && introT<1.6 && Math.floor(introT*10)%3===0) relayout();
+  const treesOn = showPhong && (mode==='terrain' || introT>1.1);
+  if(mode==='terrain' && introT<1.1) terrainGroup.scale.y=water.scale.y=.001+Math.min(1,introT/1.0); else terrainGroup.scale.y=water.scale.y=1;
+  trunks.visible=branches.visible=crowns.visible=treesOn;
+  if(monthAnim){ const u=Math.min(1,(now-monthAnim.s)/monthAnim.ms); const m=Math.round(monthAnim.from+(monthAnim.to-monthAnim.from)*u); if(m!==month) setMonth(m); if(u>=1) monthAnim=null; }
+  // thuyền
+  boatGroup.visible = showBoat && (mode==='terrain' || introT>1.1);
+  if(boatCurve){ const u = ride ? Math.min(.999,(now-ride.s)/ride.ms) : (t*.018)%1;
+    const p=boatCurve.getPointAt(u), q=boatCurve.getPointAt((u+.01)%1);
+    boat.position.copy(p); boat.lookAt(q.x,p.y,q.z); boat.position.y+=Math.sin(t*3)*.02; wake.position.set(p.x,p.y-.02,p.z); const w=(t*1.2)%1; wake.scale.setScalar(1+w*2.5); wake.material.opacity=.45*(1-w);
+    if(ride){ tmpA.copy(p).sub(q).setY(0).normalize().multiplyScalar(7); tmpA.applyAxisAngle(UP,.5); const kk=1-Math.pow(.94,dt*60); camera.position.lerp(tmpB.copy(p).add(tmpA).add(new THREE.Vector3(0,3.6,0)),kk);
+      controls.target.lerp(q.clone().add(new THREE.Vector3(0,.6,0)),Math.min(1,kk*1.7)); fly=null; if((now-ride.s)>ride.ms) ride=null; } }
+  if(!ride && fly){ const f=Math.min(1,(now-fly.s)/fly.ms), e=f<.5?4*f**3:1-Math.pow(-2*f+2,3)/2;
+    camera.position.lerpVectors(fly.p0,fly.p1,e); controls.target.lerpVectors(fly.t0,fly.t1,e); if(f>=1) fly=null; }
+  controls.update();
+  if(!reduce){ turbines.forEach((h,i)=>h.rotation.z-=dt*(1.3+i%3*.2));
+    const fall = treesOn && month>=2 && month<=4; leaves.visible=fall;
+    if(fall){ for(let i=0;i<LC;i++){const l=ldat[i]; l.ph+=dt; l.y-=l.v*dt*.18; if(l.y<0){l.y=1; l.t=trees[Math.floor(Math.random()*NT)];}
+      const tr=l.t, top=(tr.drown?waterY():surfaceY(tr.lat,tr.lon))+tr.H, base=tr.drown?waterY():surfaceY(tr.lat,tr.lon);
+      lpos[i*3]=toX(tr.lon)+Math.sin(l.ph*1.7+i)*.6; lpos[i*3+1]=base+(top-base)*l.y+.05; lpos[i*3+2]=toZ(tr.lat)+Math.cos(l.ph*1.3+i)*.6;}
+      lgeo.attributes.position.needsUpdate=true; } }
+  else leaves.visible=false;
+  windGroup.visible = document.getElementById('bWind').classList.contains('on') && (mode==='terrain'||introT>1.1);
+  traffic.cars.visible = traffic.glow.visible = traffic.show && (mode==='terrain'||introT>1.1); if(traffic.cars.visible) layoutTraffic(t);
+  rings.forEach(m=>{ const u=((t*.45+m.userData.ph)%1); m.scale.setScalar(1+u*5); m.material.opacity=.65*(1-u); m.visible=(mode==='terrain'||introT>1.1); });
+  clouds.forEach(s=>{const u=s.userData; const drift=((t*1.6*u.sp+u.ph*40)%(WD+80))-(WD+80)/2; let x=u.x+drift; if(x>WD/2+40) x-=WD+80; if(x<-WD/2-40) x+=WD+80;
+    s.position.set(x, yOf(u.alt)+Math.sin(t*.3+u.ph)*1.2, u.z-drift*.35); s.material.opacity=(ride?.4:(mode==='terrain'?1:.8))*u.base*(u.low? .6+.4*Math.sin(t*.2+u.ph):1);});
+  water.material.opacity=.9+Math.sin(t*1.3)*.03;
+  if(touring){ const s=STEPS[step], f=Math.min(1,(now-stepStart)/s.dur); [...tBar.children].forEach((el,i)=>el.firstChild.style.transform=`scaleX(${i<step?1:i===step?f:0})`); if(f>=1){ if(step<STEPS.length-1) goStep(step+1); else stopTour(); } }
+  const az=Math.atan2(camera.position.x-controls.target.x, camera.position.z-controls.target.z); needle.style.transform=`rotate(${az*180/Math.PI}deg)`;
+  renderer.render(scene,camera); updateLabels();
+  requestAnimationFrame(tick);
+}
+tick();
+document.getElementById('loader').classList.add('done');
+setTimeout(countUp,600);
+setTimeout(()=>document.getElementById('hint').style.opacity=0,8000);
+</script>
+<script>
+setTimeout(function(){var l=document.getElementById('loader');if(l&&!l.classList.contains('done')){document.getElementById('err').style.display='block';}},15000);
+</script>
+</body>
+</html>
