@@ -113,6 +113,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--vang);outline-offse
 .card ul.w{margin:12px 0 0;padding:10px 12px 10px 28px;border-radius:14px;background:#F6E7C9;font-size:13px;line-height:1.5;color:var(--than)}
 .card ul.w li+li{margin-top:4px}
 .card .coord{margin-top:10px;font-size:11.5px;color:var(--mo)}
+.card .meta{margin-top:10px;font-size:13px;color:var(--than);display:grid;gap:3px}
+.card .meta span{color:var(--mo)}
+.card a.tel{background:var(--do);color:#fff}
+.card a.tel[hidden]{display:none}
 .card .row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 .card a,.card .x{display:inline-flex;align-items:center;gap:6px;padding:11px 16px 9px;border-radius:999px;font-family:var(--display);text-transform:uppercase;font-size:14px;text-decoration:none}
 .card a{background:var(--xanh);color:var(--giay)}
@@ -120,18 +124,21 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--vang);outline-offse
 @media(max-width:760px){.card{left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));width:auto;bottom:auto;top:calc(62px + env(safe-area-inset-top,0px));max-height:46%;padding:16px;border-radius:20px}.card h3{font-size:23px}.card p{font-size:13.5px}}
 
 /* thanh dịch vụ: đặt tour, thuê thuyền, HDV, chụp hình, đặt xe, liên hệ */
-.dock{position:fixed;z-index:10;left:calc(392px + env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;justify-content:center;gap:8px;pointer-events:none}
-.dock button{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;padding:10px 14px 9px;border-radius:999px;background:var(--giay);color:var(--xanh);font-size:13px;font-weight:bold;box-shadow:0 6px 20px rgba(6,23,20,.35);white-space:nowrap;transition:transform .15s,background .15s}
-.dock button:hover{transform:translateY(-2px);background:#fff}
+/* thanh dịch vụ bên hông phải: bấm mở bảng mô tả + form gửi yêu cầu */
+.dock{position:fixed;z-index:10;right:max(16px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none;transition:opacity .3s,right .35s cubic-bezier(.3,.7,.2,1)}
+.dock button{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;padding:9px 14px 8px 11px;border-radius:999px;background:var(--giay);color:var(--xanh);font-size:13px;font-weight:bold;box-shadow:0 6px 20px rgba(6,23,20,.35);white-space:nowrap;transition:transform .15s,background .15s}
+.dock button:hover{transform:translateX(-3px);background:#fff}
 .dock button svg{width:16px;height:16px;flex:none}
 .dock button.hot{background:var(--do);color:#fff}
-body.touring .dock{opacity:0;pointer-events:none}
+body.touring .dock,body.sheet-open .dock{opacity:0;pointer-events:none}
 @media(min-width:1180px){body.card-on .dock{right:calc(382px + env(safe-area-inset-right,0px))}}
+@media(max-width:1179px){body.card-on .dock{opacity:0;pointer-events:none}}
 @media(max-width:760px){
-  .dock{left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom,0px));flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding:4px max(10px,env(safe-area-inset-right,0px)) 6px max(10px,env(safe-area-inset-left,0px));gap:6px;scrollbar-width:none;pointer-events:auto;-webkit-overflow-scrolling:touch;transition:opacity .3s}
-  .dock::-webkit-scrollbar{display:none}
-  .dock button{padding:9px 12px 8px;font-size:12.5px}
-  .panel.open~.dock,body.sheet-open .dock{opacity:0;pointer-events:none}
+  .dock{top:auto;transform:none;bottom:calc(176px + env(safe-area-inset-bottom,0px));right:max(8px,env(safe-area-inset-right,0px));gap:5px}
+  .dock button{width:42px;height:42px;padding:0;justify-content:center;border-radius:50%}
+  .dock button span{display:none}
+  .dock button svg{width:18px;height:18px}
+  .panel.open~.dock{opacity:0;pointer-events:none}
 }
 .sheet.svc .in{border-top-color:var(--do);padding-top:20px}
 .sheet.svc h3{color:var(--xanh);font-size:clamp(26px,4.6vw,38px)}
@@ -145,7 +152,8 @@ body.touring .dock{opacity:0;pointer-events:none}
 .frm input:focus,.frm textarea:focus,.frm select:focus{outline:2px solid var(--xanh);outline-offset:1px;border-color:var(--xanh)}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .acts a,.acts button{display:inline-flex;align-items:center;gap:7px;padding:12px 16px 10px;border-radius:999px;font-family:var(--display);text-transform:uppercase;font-size:14px;text-decoration:none;background:var(--kem);color:var(--than)}
-.acts .pri{background:var(--do);color:#fff}
+.acts .pri{background:var(--do);color:#fff;min-width:170px;justify-content:center}
+.acts .pri[disabled]{opacity:.6;cursor:default}
 .acts .sec{background:var(--xanh);color:var(--giay)}
 .acts svg{width:15px;height:15px}
 .fine{display:block;margin-top:12px;font-size:11.5px;line-height:1.45;color:var(--mo)}
@@ -192,7 +200,7 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
 
 .compass{position:fixed;z-index:9;right:max(16px,env(safe-area-inset-right,0px));top:calc(84px + env(safe-area-inset-top,0px));width:48px;height:48px;border-radius:50%;background:var(--panel);backdrop-filter:var(--glass);display:grid;place-items:center}
 .compass svg{width:30px;height:30px}
-@media(max-width:760px){.compass{top:auto;bottom:calc(122px + env(safe-area-inset-bottom,0px));right:max(10px,env(safe-area-inset-right,0px));width:40px;height:40px}}
+@media(max-width:760px){.compass{top:auto;bottom:calc(66px + env(safe-area-inset-bottom,0px));right:max(8px,env(safe-area-inset-right,0px));width:42px;height:42px}}
 .hint{position:fixed;z-index:9;left:50%;top:calc(84px + env(safe-area-inset-top,0px));transform:translateX(-50%);padding:9px 16px 7px;border-radius:999px;background:var(--panel);backdrop-filter:var(--glass);font-size:12.5px;color:rgba(246,231,201,.88);transition:opacity .6s;white-space:nowrap;pointer-events:none}
 @media(max-width:760px){.hint{top:calc(64px + env(safe-area-inset-top,0px));font-size:11.5px;padding:7px 12px 5px}}
 .loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--dem);transition:opacity .8s}
@@ -281,8 +289,9 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
   <h3 class="d" id="ct"></h3>
   <p id="cd"></p>
   <ul class="w" id="cw" hidden></ul>
+  <div class="meta" id="cmeta"></div>
   <div class="coord" id="cc"></div>
-  <div class="row"><button class="x" id="cbook" type="button" style="background:var(--do);color:#fff">Đặt tour</button><a id="cmap" href="#" target="_blank" rel="noopener">Google Maps ↗</a><button class="x" id="cx" type="button">Đóng</button></div>
+  <div class="row"><a id="ctel" href="#" class="tel">Gọi</a><a id="cmap" href="#" target="_blank" rel="noopener">Google Maps ↗</a><button class="x" id="cbook" type="button">Gửi yêu cầu</button><button class="x" id="cx" type="button">Đóng</button></div>
 </div>
 
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetH">
@@ -313,19 +322,16 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
     <p class="lead" id="svcP"></p>
     <ul class="inc" id="svcInc"></ul>
     <form class="frm" id="svcForm" autocomplete="on">
-      <label>Họ tên<input name="name" placeholder="Nguyễn Văn A" autocomplete="name"></label>
-      <label>Điện thoại / Zalo<input name="phone" type="tel" inputmode="tel" placeholder="09xx xxx xxx" autocomplete="tel"></label>
-      <label>Ngày đi<input name="date" type="date"></label>
-      <label>Số người<input name="n" type="number" min="1" max="60" value="2" inputmode="numeric"></label>
-      <label class="full">Ghi chú<textarea name="note" rows="2" placeholder="Điểm đón, giờ đi, yêu cầu riêng…"></textarea></label>
+      <label>Họ tên<input name="name" placeholder="Nguyễn Văn A" autocomplete="name" required></label>
+      <label>Số điện thoại<input name="phone" type="tel" inputmode="tel" placeholder="09xx xxx xxx" autocomplete="tel" required></label>
+      <label class="full">Nội dung<textarea name="note" rows="3" placeholder="Ngày đi, số người, điểm đón, yêu cầu riêng…" required></textarea></label>
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
     </form>
     <div class="acts">
-      <button class="pri" id="svcZalo" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h12v8H6l-3 2.5V11H2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>Gửi qua Zalo</button>
-      <a class="sec" id="svcTel" href="#"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h3l1.5 3.5L6 7a8 8 0 0 0 3 3l1.5-1.5L14 10v3a1 1 0 0 1-1 1A11 11 0 0 1 2 3a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Gọi ngay</a>
-      <a id="svcMail" href="#"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 4.5 8 9l5.5-4.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Gửi email</a>
+      <button class="pri" id="svcSend" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 14 2 10 14 8 9z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Gửi yêu cầu</span></button>
       <button class="x" id="svcX" type="button">Đóng</button>
     </div>
-    <small class="fine" id="svcFine">Thông tin bạn điền chỉ dùng để soạn tin nhắn gửi đi, không lưu ở đâu khác. Giá được báo theo nhóm và ngày đi; xác nhận lại mực nước hồ và thời tiết trước ngày khởi hành.</small>
+    <small class="fine" id="svcFine">Chúng tôi sẽ gọi hoặc nhắn lại trong ngày. Giá được báo theo nhóm và ngày đi; xác nhận lại mực nước hồ và thời tiết trước ngày khởi hành.</small>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -344,7 +350,7 @@ const C = {xanh:0x15584F, do:0xC44125, kem:0xF6E7C9, vang:0xEFCB8F, giay:0xFBF4E
 const CAT = {
   phong:{label:'Rừng phong',color:'#C44125'}, water:{label:'Hồ & thuyền',color:'#3E8E8A'},
   cloud:{label:'Săn mây & gió',color:'#EFCB8F'}, history:{label:'Ký ức Khe Sanh',color:'#8A7B66'},
-  nature:{label:'Thác & núi',color:'#8FAE86'}, stay:{label:'Cà phê & lưu trú',color:'#E0603F'}, hub:{label:'Đô thị & cửa khẩu',color:'#F6E7C9'}
+  nature:{label:'Thác & núi',color:'#8FAE86'}, stay:{label:'Lưu trú & farm',color:'#E0603F'}, food:{label:'Ăn uống & cà phê',color:'#D9A43C'}, hub:{label:'Đô thị & cửa khẩu',color:'#F6E7C9'}
 };
 // Toạ độ đối chiếu Google Maps 27/10/2026; đập theo đầu sông Rào Quán trên OpenStreetMap
 const POIS = [
@@ -383,19 +389,19 @@ const POIS = [
    desc:'Cửa khẩu đường bộ sang Lào trên QL9, nhiều xe tải và xe khách qua lại. Mở cửa khoảng 7:00–22:00.'},
   {id:'khesanh', name:'Trung tâm xã Khe Sanh', short:'Khe Sanh', cat:'hub', lat:16.6294268, lon:106.7403677,
    desc:'Chợ Khe Sanh và các phố Hùng Vương, Lê Duẩn. Chợ họp từ sáng sớm, có cà phê và đặc sản địa phương.'},
-  {id:'homi', name:'Homi Coffee', short:'Homi Coffee', cat:'stay', lat:16.6363652, lon:106.7585293,
+  {id:'homi', name:'Homi Coffee', short:'Homi Coffee', cat:'food', rating:'4,5★ (415)', addr:'QL9, Lương Lễ', lat:16.6363652, lon:106.7585293,
    desc:'Quán cà phê ven QL9 phía đông Khe Sanh, nhìn xuống thung lũng sông. Bán cả cà phê hạt địa phương.'},
-  {id:'retro', name:'Retro Khe Sanh', short:'Retro Khe Sanh', cat:'stay', lat:16.6353849, lon:106.7573972,
+  {id:'retro', name:'Retro Khe Sanh', short:'Retro Khe Sanh', cat:'stay', lat:16.6353849, lon:106.7573972, phone:'0911222678', rating:'4,4★ (253)', addr:'Lương Lễ, Khe Sanh',
    desc:'Cà phê, phòng nghỉ và glamping trên sườn đồi cạnh QL9, view thung lũng.'},
-  {id:'mori', name:'Mori Khe Sanh', short:'Mori Khe Sanh', cat:'stay', lat:16.6359417, lon:106.7581291,
+  {id:'mori', name:'Mori Khe Sanh', short:'Mori Khe Sanh', cat:'food', lat:16.6359417, lon:106.7581291,
    desc:'Quán cà phê, quán ăn ven đường Lương Lễ, cùng cụm với Homi và Retro.'},
-  {id:'vuonnd', name:'Farm Stay Vườn Nhiệt Đới', short:'Vườn Nhiệt Đới', cat:'stay', lat:16.6365398, lon:106.7483397,
+  {id:'vuonnd', name:'Farm Stay Vườn Nhiệt Đới', short:'Vườn Nhiệt Đới', cat:'stay', lat:16.6365398, lon:106.7483397, phone:'0912568772', rating:'4,8★ (136)', addr:'Tân Xuyên, Khe Sanh',
    desc:'Farmstay với các căn bungalow ở thôn Tân Xuyên, gần trung tâm.'},
-  {id:'valley', name:'Khe Sanh Valley Farm', short:'Valley Farm', cat:'stay', lat:16.6493351, lon:106.7165925,
+  {id:'valley', name:'Khe Sanh Valley Farm', short:'Valley Farm', cat:'stay', lat:16.6493351, lon:106.7165925, phone:'0835877689', rating:'4,4★ (68)',
    desc:'Nhà hàng vườn bên hồ nhỏ gần Tà Cơn, rau trái tự trồng.'},
-  {id:'rose', name:'Rose Farm', short:'Rose Farm', cat:'stay', lat:16.6762279, lon:106.6954895,
+  {id:'rose', name:'Rose Farm', short:'Rose Farm', cat:'stay', lat:16.6762279, lon:106.6954895, phone:'0366612345', rating:'4,4★ (104)',
    desc:'Vườn hoa, điểm chụp ảnh gần cụm điện gió Hướng Tân trên đường lên hồ.'},
-  {id:'charm', name:'Charm Cafe & More (Ruộng)', short:'Charm Cafe', cat:'stay', lat:16.6586976, lon:106.7119231,
+  {id:'charm', name:'Charm Cafe & More (Ruộng)', short:'Charm Cafe', cat:'food', lat:16.6586976, lon:106.7119231,
    desc:'Cà phê sân vườn nhiều hoa, nhìn ra đồi và tua-bin điện gió.'},
   {id:'voimep', name:'Đỉnh Voi Mẹp · 1.707 m', short:'Voi Mẹp · 1.707 m', cat:'nature', lat:16.7685011, lon:106.7128209,
    desc:'Nóc nhà Quảng Trị, còn gọi Tá Linh Sơn, giáp ranh Hướng Linh, Hướng Sơn và Hướng Hiệp. Rừng nguyên sinh, dốc đá, nhiều suối; leo núi nhiều ngày.',
@@ -413,7 +419,33 @@ const POIS = [
   {id:'huongphung', name:'Trung tâm xã Hướng Phùng', short:'Hướng Phùng', cat:'hub', lat:16.7432538, lon:106.5791868,
    desc:'Trung tâm xã biên giới Hướng Phùng trên đường HCM nhánh Tây, điểm dừng trên đường lên Chênh Vênh và Tà Puồng.'},
   {id:'trosie', name:'Trosie Garden', short:'Trosie Garden', cat:'stay', lat:16.6436337, lon:106.7251385,
-   desc:'Khu nghỉ, ăn uống, cắm trại ở Km 2 đường Hồ Chí Minh. Lối vào có đoạn đất đá.'}
+   desc:'Khu nghỉ, ăn uống, cắm trại ở Km 2 đường Hồ Chí Minh. Lối vào có đoạn đất đá.'},
+  // Lưu trú, farm, quán ăn, cà phê: tên, toạ độ, SĐT, địa chỉ và điểm đánh giá lấy từ Google Maps 27/10/2026
+  {"id": "g_huongphunghome", "name": "Hướng Phùng Homestay", "short": "Hướng Phùng Homestay", "cat": "stay", "lat": 16.732275, "lon": 106.599144, "desc": "Chỗ nghỉ dạng homestay/bungalow, hợp nhóm bạn và gia đình.", "addr": "Hướng Phùng"},
+  {"id": "g_mayfarm", "name": "May Farm", "short": "May Farm", "cat": "stay", "lat": 16.6251202, "lon": 106.7205734, "desc": "Chỗ nghỉ dạng homestay/bungalow, hợp nhóm bạn và gia đình.", "addr": "Tân Lập"},
+  {"id": "g_nammuabungalow", "name": "Năm mùa Bungalows", "short": "Năm mùa Bungalows", "cat": "stay", "lat": 16.7510605, "lon": 106.6055603, "desc": "Chỗ nghỉ dạng homestay/bungalow, hợp nhóm bạn và gia đình.", "addr": "Hướng Phùng"},
+  {"id": "g_hiddenhill", "name": "Hidden Hill", "short": "Hidden Hill", "cat": "stay", "lat": 16.6414879, "lon": 106.7606911, "desc": "Khách sạn trong trung tâm Khe Sanh, tiện đi chợ, ăn tối và xuất phát sớm đi rừng phong, Tà Cơn.", "phone": "0916176682", "addr": "Thôn, Tà Đu, Khe Sanh", "rating": "4,9★ (20)"},
+  {"id": "g_homestaybaongu", "name": "Homestay Bảo Nguyên Xanh", "short": "Homestay Bảo Nguyên…", "cat": "stay", "lat": 16.6635283, "lon": 106.7096515, "desc": "Chỗ nghỉ dạng homestay/bungalow, hợp nhóm bạn và gia đình.", "phone": "0912621728", "addr": "Khe Sanh", "rating": "4,8★ (23)"},
+  {"id": "g_greenhotel", "name": "Green Hotel", "short": "Green Hotel", "cat": "stay", "lat": 16.632882, "lon": 106.740561, "desc": "Khách sạn trong trung tâm Khe Sanh, tiện đi chợ, ăn tối và xuất phát sớm đi rừng phong, Tà Cơn.", "phone": "0914039009", "addr": "36 Lê Duẩn, Khe Sanh", "rating": "4,0★ (337)"},
+  {"id": "g_khachsanthanhd", "name": "Khách sạn Thành Đô", "short": "Khách sạn Thành Đô", "cat": "stay", "lat": 16.630972, "lon": 106.74411, "desc": "Khách sạn trong trung tâm Khe Sanh, tiện đi chợ, ăn tối và xuất phát sớm đi rừng phong, Tà Cơn.", "phone": "0974167234", "addr": "40 Hà Huy Tập, Khe Sanh", "rating": "4,5★ (51)"},
+  {"id": "g_khesanhluxuryh", "name": "Khe Sanh Luxury Hotel", "short": "Khe Sanh Luxury Hotel", "cat": "stay", "lat": 16.6639419, "lon": 106.7105058, "desc": "Khách sạn trong trung tâm Khe Sanh, tiện đi chợ, ăn tối và xuất phát sớm đi rừng phong, Tà Cơn.", "phone": "0971809777", "addr": "Thôn Trằm, Khe Sanh", "rating": "4,5★ (234)"},
+  {"id": "g_khanhphuonglux", "name": "Khánh Phương Luxury Hotel", "short": "Khánh Phương Luxury…", "cat": "stay", "lat": 16.6205607, "lon": 106.7367651, "desc": "Khách sạn trong trung tâm Khe Sanh, tiện đi chợ, ăn tối và xuất phát sớm đi rừng phong, Tà Cơn.", "phone": "02333757777", "addr": "02 Hùng Vương, Khe Sanh", "rating": "3,9★ (259)"},
+  {"id": "g_thehillshotel", "name": "The Hills Hotel", "short": "The Hills Hotel", "cat": "stay", "lat": 16.6325579, "lon": 106.7394137, "desc": "Khách sạn trong trung tâm Khe Sanh, tiện đi chợ, ăn tối và xuất phát sớm đi rừng phong, Tà Cơn.", "phone": "0915015234", "addr": "55 Phan ĐÌnh Phùng, Khe Sanh", "rating": "4,4★ (120)"},
+  {"id": "g_nhahangkhesanh", "name": "Nhà Hàng Khe Sanh Phố Núi", "short": "Nhà Hàng Khe Sanh Ph…", "cat": "food", "lat": 16.6213997, "lon": 106.7283157, "desc": "Quán ăn ở Khe Sanh, hỏi món đặc sản địa phương và đặc sản Lào.", "addr": "236 Lê Duẩn, Khe Sanh", "rating": "4,5★ (15)"},
+  {"id": "g_nhahangbanglan", "name": "Nhà hàng Bằng Lăng Tím", "short": "Nhà hàng Bằng Lăng Tím", "cat": "food", "lat": 16.6208847, "lon": 106.7366506, "desc": "Quán ăn ở Khe Sanh, hỏi món đặc sản địa phương và đặc sản Lào.", "phone": "0983207515", "addr": "14 Hùng Vương, Khe Sanh", "rating": "4,5★ (23)"},
+  {"id": "g_nhahangkhanhph", "name": "Nhà hàng Khánh Phương", "short": "Nhà hàng Khánh Phương", "cat": "food", "lat": 16.6207211, "lon": 106.7367229, "desc": "Quán ăn ở Khe Sanh, hỏi món đặc sản địa phương và đặc sản Lào.", "phone": "02333886666", "addr": "8_12 Hùng Vương, Khe Sanh", "rating": "4,8★ (76)"},
+  {"id": "g_tamscafeanvat", "name": "Tam's Cafe & ăn vặt", "short": "Tam's Cafe & ăn vặt", "cat": "food", "lat": 16.6304387, "lon": 106.7385797, "desc": "Quán cà phê ở Khe Sanh, thử cà phê Arabica trồng trên đất đỏ bazan Hướng Hóa.", "phone": "0983137214", "addr": "32 Lê Lợi, Khe Sanh", "rating": "4,5★ (78)"},
+  {"id": "g_dacsanlaosfood", "name": "Đặc Sản Laos Food", "short": "Đặc Sản Laos Food", "cat": "food", "lat": 16.6260414, "lon": 106.7336265, "desc": "Quán đặc sản Lào ở Khe Sanh, gần cửa khẩu Lao Bảo nên món Lào khá chuẩn.", "phone": "0386628001", "addr": "170 Lê Duẩn, Khe Sanh", "rating": "4,4★ (80)"},
+  {"id": "g_quanlaoletran", "name": "Quán Lào Lệ Trần", "short": "Quán Lào Lệ Trần", "cat": "food", "lat": 16.6267346, "lon": 106.7350461, "desc": "Quán đặc sản Lào ở Khe Sanh, gần cửa khẩu Lao Bảo nên món Lào khá chuẩn.", "phone": "0982644439", "addr": "06 Hàm Nghi, Khe Sanh", "rating": "4,5★ (67)"},
+  {"id": "g_quanhungmen", "name": "Quán Hùng Mến", "short": "Quán Hùng Mến", "cat": "food", "lat": 16.6267195, "lon": 106.7335855, "desc": "Quán ăn ở Khe Sanh, hỏi món đặc sản địa phương và đặc sản Lào.", "phone": "0914125199", "addr": "Khe Sanh", "rating": "4,6★ (30)"},
+  {"id": "g_khesanhcoffeef", "name": "Khe Sanh Coffee & Food", "short": "Khe Sanh Coffee & Food", "cat": "food", "lat": 16.6641468, "lon": 106.7106869, "desc": "Quán cà phê ở Khe Sanh, thử cà phê Arabica trồng trên đất đỏ bazan Hướng Hóa.", "phone": "0988283988", "addr": "Km5 Khe Sanh", "rating": "4,4★ (174)"},
+  {"id": "g_haphuong1coffe", "name": "Hà Phương 1 Coffee", "short": "Hà Phương 1 Coffee", "cat": "food", "lat": 16.6373923, "lon": 106.7292065, "desc": "Quán cà phê ở Khe Sanh, thử cà phê Arabica trồng trên đất đỏ bazan Hướng Hóa.", "phone": "0945555311", "addr": "Khe Sanh", "rating": "4,9★ (11)"},
+  {"id": "g_tiemcaphe1985", "name": "Tiệm cà phê 1985", "short": "Tiệm cà phê 1985", "cat": "food", "lat": 16.6261681, "lon": 106.7349456, "desc": "Quán cà phê ở Khe Sanh, thử cà phê Arabica trồng trên đất đỏ bazan Hướng Hóa.", "phone": "0979312999", "addr": "164 Lê Duẩn, Khe Sanh", "rating": "4,8★ (67)"},
+  {"id": "g_charmcafemored", "name": "Charm Cafe & More (Đoàn Khuê)", "short": "Charm Cafe & More (Đ…", "cat": "food", "lat": 16.6184645, "lon": 106.7272327, "desc": "Quán cà phê ở Khe Sanh, thử cà phê Arabica trồng trên đất đỏ bazan Hướng Hóa.", "phone": "0334810810", "addr": "Đ. Đoàn Khuê, Khe Sanh", "rating": "4,9★ (49)"},
+  {"id": "g_cafemilano", "name": "Cafe MILANO", "short": "Cafe MILANO", "cat": "food", "lat": 16.6291177, "lon": 106.7374056, "desc": "Quán cà phê ở Khe Sanh, thử cà phê Arabica trồng trên đất đỏ bazan Hướng Hóa.", "phone": "0382251215", "addr": "Khe Sanh", "rating": "4,2★ (42)"},
+  {"id": "g_quanchaykhesan", "name": "Quán Chay Khe Sanh", "short": "Quán Chay Khe Sanh", "cat": "food", "lat": 16.6267539, "lon": 106.7350225, "desc": "Quán cơm chay ở trung tâm Khe Sanh.", "phone": "0972141289", "addr": "8 Hàm Nghi, Khe Sanh", "rating": "4,8★ (13)"},
+  {"id": "g_quancomvietnam", "name": "Quán cơm Việt Nam", "short": "Quán cơm Việt Nam", "cat": "food", "lat": 16.6260414, "lon": 106.7336265, "desc": "Quán ăn ở Khe Sanh, hỏi món đặc sản địa phương và đặc sản Lào.", "phone": "0905782501", "addr": "170 Lê Duẩn, Khe Sanh", "rating": "5,0★ (3)"},
+  {"id": "g_bunboohong", "name": "Bún Bò O Hồng", "short": "Bún Bò O Hồng", "cat": "food", "lat": 16.6297727, "lon": 106.7357226, "desc": "Quán bún bò sáng ở trung tâm Khe Sanh, đi sớm trước khi lên rừng phong.", "phone": "0348995505", "addr": "128 Hùng Vương, Khe Sanh"}
 ];
 const ROAD_LABELS=[[16.6200,106.7110,'QL9 · Đường 9'],[16.6030,106.6420,'QL9 → Lao Bảo'],[16.6390,106.7880,'QL9 → Đông Hà ~60 km'],
   [16.6620,106.7120,'Đường HCM nhánh Tây'],[16.7230,106.6460,'HCM Tây → Hướng Phùng'],[16.6220,106.5700,'QL9E · sang Lào'],[16.6050,106.7450,'ĐT587'],[16.5650,106.6720,'ĐT586'],[16.6170,106.5700,'Sông Sê Pôn · biên giới'],[16.8020,106.5880,'Đèo Sa Mù · HCM Tây'],[16.8500,106.5700,'HCM Tây → Tà Puồng'],[16.7480,106.6000,'Đường A Roong – Hướng Lập']];
@@ -815,7 +847,7 @@ function addLabel({lat,lon,html,cls='',onClick,lift=0,prio=5,key}){
   if(onClick) el.addEventListener('click',e=>{e.stopPropagation();onClick();});
   labelsEl.appendChild(el); const o={el,lat,lon,lift,prio,sz:null,key}; LABELS.push(o); LABELS.sort((a,b)=>a.prio-b.prio); return o;
 }
-POIS.forEach(p=>{const o=addLabel({lat:p.lat,lon:p.lon,lift:p.big?2.6:1.2,cls:p.big?'big':(p.id==='ben'?'warn':'zone'),prio:p.big?0:(p.id==='ben'?1:(p.cat==='stay'?5:3)),key:p.id,
+POIS.forEach(p=>{const o=addLabel({lat:p.lat,lon:p.lon,lift:p.big?2.6:1.2,cls:p.big?'big':(p.id==='ben'?'warn':'zone'),prio:p.big?0:(p.id==='ben'?1:(p.cat==='stay'?5:(p.cat==='food'?6:3))),key:p.id,
   html:p.big?`<div class="tag">${p.short}</div>`:`<div class="tag"><i style="background:${CAT[p.cat].color}"></i><span>${p.short}</span></div>`,onClick:()=>focusPoi(p)}); o.cat=p.cat;});
 ROAD_LABELS.forEach(([la,lo,t],k)=>addLabel({lat:la,lon:lo,cls:'road',prio:8,key:'r'+k,html:`<div class="tag">${t}</div>`}));
 GEO.places.filter(p=>p.place==='town'||p.place==='village').forEach(p=>addLabel({lat:p.lat,lon:p.lon,cls:'road place',prio:10,key:'pl',html:`<div class="tag">${p.name}</div>`}));
@@ -831,7 +863,8 @@ function updateLabels(){
     const road=o.el.classList.contains('road');
     v3.set(toX(o.lon),Math.max(surfaceY(o.lat,o.lon),inLake(o.lat,o.lon)?waterY():0)+o.lift+(road?0.8:0),toZ(o.lat)).project(camera);
     let vis=showLabels && v3.z<1 && Math.abs(v3.x)<1.05 && Math.abs(v3.y)<1.05;
-    if(MOBILE && !tourKeys && camDist>230 && (road || o.cat==='stay')) vis=false;
+    if(MOBILE && !tourKeys && camDist>230 && (road || o.cat==='stay' || o.cat==='food')) vis=false;
+    if(!MOBILE && !tourKeys && camDist>420 && o.cat==='food') vis=false;
     if(tourKeys && !tourKeys.includes(o.key)) vis=false;
     if(o.cat && hiddenCats.has(o.cat)) vis=false;
     const sx=(v3.x*.5+.5)*w, sy=(-v3.y*.5+.5)*h;
@@ -864,6 +897,8 @@ function openCard(p){
   document.getElementById('ct').textContent=p.name; document.getElementById('cd').textContent=p.desc;
   const cw=document.getElementById('cw'); cw.hidden=!p.warn; cw.innerHTML=(p.warn||[]).map(s=>`<li>${s}</li>`).join('');
   document.getElementById('cc').textContent=`${p.lat.toFixed(5)}°B, ${p.lon.toFixed(5)}°Đ · cao ~${Math.round(inLake(p.lat,p.lon)?LAKE_M:hAt(p.lat,p.lon))} m`;
+  const meta=[]; if(p.rating) meta.push(`<div><span>Google Maps</span> ${p.rating}</div>`); if(p.addr) meta.push(`<div><span>Địa chỉ</span> ${p.addr}</div>`); if(p.phone) meta.push(`<div><span>Điện thoại</span> ${p.phone.replace(/(\d{4})(\d{3})(\d+)/,'$1 $2 $3')}</div>`);
+  document.getElementById('cmeta').innerHTML=meta.join(''); const tel=document.getElementById('ctel'); tel.hidden=!p.phone; tel.href='tel:'+(p.phone||'');
   document.getElementById('cmap').href=gmaps(p.lat,p.lon); card.classList.add('show'); document.body.classList.add('card-on');
   zl.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===p.id));
 }
@@ -917,8 +952,10 @@ function showBig(val,label,suf=''){ const el=document.getElementById('bigNumV');
 const hideBig=()=>bigNum.classList.remove('on');
 
 /* ================= DỊCH VỤ ================= */
-// Sửa thông tin liên hệ ở đây (không cần máy chủ: form soạn sẵn tin nhắn rồi mở Zalo / email / gọi điện)
-const CONTACT={name:'Mùa Phong Khe Sanh', phone:'0988886901', zalo:'https://zalo.me/0988886901', email:'khanhdesignvn@gmail.com'};
+// Form gửi yêu cầu không cần máy chủ: POST tới FormSubmit, nội dung được chuyển tiếp về email quản trị (không hiện trên trang).
+// Lần gửi đầu tiên FormSubmit gửi email kích hoạt tới hộp thư; sau khi bấm xác nhận, mọi yêu cầu sẽ về email (và thông báo trên điện thoại).
+// Có thể thay bằng chuỗi ẩn danh FormSubmit cấp sau khi kích hoạt, hoặc thêm Telegram: NOTIFY.telegram={token:'...',chat:'...'}.
+const NOTIFY={endpoint:'https://formsubmit.co/ajax/khanhdesignvn@gmail.com', telegram:null};
 const ICO={
   tour:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 5.5 9 9l-3.5 1.5L7 7z" fill="currentColor"/></svg>',
   boat:'<svg viewBox="0 0 16 16"><path d="M2 10h12l-2 3H4z" fill="currentColor"/><path d="M8 2v8M8 2l4 6H8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
@@ -941,26 +978,29 @@ const SERVICES=[
    inc:['Xe 4, 7, 16 chỗ có tài xế','Thuê xe máy theo ngày tại Khe Sanh','Xe gầm cao cho Cu Vơ, bến Km 13, đồi điện gió','Báo điểm đón và giờ khởi hành khi đặt']},
   {id:'stay', label:'Lưu trú', h:'Homestay, farmstay, cắm trại', p:'Nghỉ ở farmstay, glamping ven QL9 hoặc homestay cộng đồng Chênh Vênh; lều trại ven hồ Rào Quán cho đêm ngắm sao và săn mây sáng sớm.',
    inc:['Giữ phòng sớm mùa lá đỏ (T12–T1)','Lều, túi ngủ, bếp dã ngoại cho nhóm cắm trại','Homestay Vân Kiều: cơm lam, rượu cần, văn nghệ bản','Đêm trên hồ lạnh, mang áo ấm']},
-  {id:'contact', label:'Liên hệ', h:'Liên hệ Mùa Phong Khe Sanh', p:'Hỏi nhanh về mực nước hồ, tình trạng lá, thời tiết hay ghép đoàn. Trả lời trong giờ hành chính, nhanh nhất qua Zalo.',
-   inc:['Zalo / điện thoại: '+CONTACT.phone,'Email: '+CONTACT.email,'Tư vấn miễn phí lịch trình 1–3 ngày']}
+  {id:'contact', label:'Liên hệ', h:'Liên hệ Mùa Phong Khe Sanh', p:'Hỏi nhanh về mực nước hồ, tình trạng lá, thời tiết hay ghép đoàn. Để lại số, chúng tôi gọi lại trong ngày.',
+   inc:['Tư vấn miễn phí lịch trình 1–3 ngày','Cập nhật tình trạng lá phong theo tuần','Ghép đoàn cuối tuần mùa lá đỏ']}
 ];
 const dock=document.getElementById('dock'), svc=document.getElementById('svc'), svcForm=document.getElementById('svcForm');
 let curSvc=null;
-SERVICES.forEach(s=>{const b=document.createElement('button');b.type='button';b.className=s.hot?'hot':'';b.innerHTML=ICO[s.id]+s.label;b.onclick=()=>openSvc(s);dock.appendChild(b);});
+SERVICES.forEach(s=>{const b=document.createElement('button');b.type='button';b.className=s.hot?'hot':'';b.title=s.label;b.setAttribute('aria-label',s.label);b.innerHTML=ICO[s.id]+'<span>'+s.label+'</span>';b.onclick=()=>openSvc(s);dock.appendChild(b);});
 function openSvc(s){ curSvc=s; document.getElementById('svcH').textContent=s.h; document.getElementById('svcP').textContent=s.p;
   document.getElementById('svcInc').innerHTML=s.inc.map(x=>`<li>${x}</li>`).join(''); document.getElementById('svcEb').textContent='Dịch vụ · '+s.label;
-  svcForm.hidden=(s.id==='contact'); document.getElementById('svcTel').href='tel:'+CONTACT.phone.replace(/\s/g,'');
   svc.classList.add('show'); document.body.classList.add('sheet-open'); if(MOBILE) document.getElementById('panel').classList.remove('open'); }
 function closeSvc(){ svc.classList.remove('show'); document.body.classList.remove('sheet-open'); }
-function svcText(){ const f=new FormData(svcForm); const d=f.get('date'); const dd=d?new Date(d+'T00:00').toLocaleDateString('vi-VN'):'(chưa chọn)';
-  return `Xin chào ${CONTACT.name}, tôi muốn ${curSvc.label.toLowerCase()}: ${curSvc.h}.\n- Họ tên: ${f.get('name')||'(chưa điền)'}\n- Điện thoại: ${f.get('phone')||'(chưa điền)'}\n- Ngày đi: ${dd}\n- Số người: ${f.get('n')||'?'}\n- Ghi chú: ${f.get('note')||'không'}\n(Gửi từ sa bàn 3D Mùa Phong Khe Sanh)`; }
+async function sendSvc(){ const f=svcForm; if(!f.reportValidity()) return; const d=new FormData(f);
+  const btn=document.getElementById('svcSend'); btn.disabled=true; btn.querySelector('span').textContent='Đang gửi…';
+  const body={_subject:`[rungphonghuong.com] ${curSvc.label}: ${d.get('name')} · ${d.get('phone')}`, _template:'table', _captcha:'false',
+    'Dịch vụ':curSvc.label, 'Họ tên':d.get('name'), 'Số điện thoại':d.get('phone'), 'Nội dung':d.get('note'), 'Trang':location.href};
+  let ok=false;
+  try{ const r=await fetch(NOTIFY.endpoint,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)}); ok=r.ok; }catch(e){}
+  if(NOTIFY.telegram&&NOTIFY.telegram.token){ try{ await fetch(`https://api.telegram.org/bot${NOTIFY.telegram.token}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:NOTIFY.telegram.chat,text:`${curSvc.label}\n${d.get('name')} · ${d.get('phone')}\n${d.get('note')}`})}); ok=true; }catch(e){} }
+  btn.disabled=false; btn.querySelector('span').textContent='Gửi yêu cầu';
+  if(ok){ showToast('Đã gửi. Chúng tôi sẽ liên hệ lại sớm.'); f.reset(); closeSvc(); } else showToast('Chưa gửi được, vui lòng thử lại sau.'); }
 const toast=document.getElementById('toast'); let toastT;
 function showToast(s){ toast.textContent=s; toast.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>toast.classList.remove('on'),2600); }
-document.getElementById('svcZalo').onclick=async()=>{ const txt=curSvc.id==='contact'?`Xin chào ${CONTACT.name}, tôi cần tư vấn về rừng phong hương Khe Sanh.`:svcText();
-  try{ await navigator.clipboard.writeText(txt); showToast('Đã sao chép nội dung, dán vào Zalo để gửi'); }catch(e){ showToast('Mở Zalo để nhắn tin'); }
-  setTimeout(()=>window.open(CONTACT.zalo,'_blank','noopener'),500); };
-document.getElementById('svcMail').onclick=e=>{ const txt=curSvc.id==='contact'?'Xin chào, tôi cần tư vấn về rừng phong hương Khe Sanh.':svcText();
-  e.currentTarget.href=`mailto:${CONTACT.email}?subject=${encodeURIComponent('['+curSvc.label+'] '+curSvc.h)}&body=${encodeURIComponent(txt)}`; };
+document.getElementById('svcSend').onclick=sendSvc;
+svcForm.addEventListener('submit',e=>{e.preventDefault();sendSvc();});
 document.getElementById('svcX').onclick=closeSvc; svc.addEventListener('click',e=>{if(e.target===svc)closeSvc();});
 // nút trong thẻ điểm đến: đặt tour tới điểm này
 document.getElementById('cbook').onclick=()=>{ const s=SERVICES[0]; openSvc(s); const n=svcForm.elements.note; if(n && !n.value) n.value='Muốn đi: '+document.getElementById('ct').textContent; };
