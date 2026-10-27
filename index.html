@@ -3,7 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mùa Phong Khe Sanh</title>
+<title>Mùa Phong Khe Sanh · Rừng phong hương hồ Rào Quán</title>
+<meta name="description" content="Sa bàn 3D rừng phong hương hồ Rào Quán, Khe Sanh: tình trạng lá, lịch trình 1 ngày và 2N1Đ, thuê thuyền, homestay, quán ăn và lưu ý an toàn. Đặt tour mùa lá đỏ T12–T1.">
+<meta name="theme-color" content="#0A2622">
+<link rel="canonical" href="https://rungphonghuong.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mùa Phong Khe Sanh">
+<meta property="og:url" content="https://rungphonghuong.com/">
+<meta property="og:title" content="Mùa Phong Khe Sanh · Rừng phong hương hồ Rào Quán">
+<meta property="og:description" content="Sa bàn 3D khám phá rừng phong đỏ Khe Sanh: lịch trình, thuê thuyền, lưu trú, ăn uống. Mùa lá đẹp nhất giữa T12 – đầu T1.">
+<meta property="og:image" content="https://rungphonghuong.com/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:locale" content="vi_VN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rungphonghuong.com/og.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 4 C23 10 25 12 31 11 C29 16 30 19 36 22 C29 24 26 25 25 29 L21 27 L21 37 L19 37 L19 27 L15 29 C14 25 11 24 4 22 C10 19 11 16 9 11 C15 12 17 10 20 4Z' fill='%23C44125'/%3E%3C/svg%3E">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Sa bàn 3D rừng phong hương hồ Rào Quán, Khe Sanh: địa hình cắt lớp 100 m, tuyến thuyền vào rừng phong, mùa lá theo tháng, cảnh báo an toàn và trình chiếu tự động.">
 <meta name="theme-color" content="#0A2622">
@@ -118,6 +132,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--vang);outline-offse
 .card .meta{margin-top:10px;font-size:13px;color:var(--than);display:grid;gap:3px}
 .card .meta span{color:var(--mo)}
 .card a.tel{background:var(--do);color:#fff}
+.card a.dir{background:var(--xanh);color:var(--giay)}
 .card a.tel[hidden]{display:none}
 .card .row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 .card a,.card .x{display:inline-flex;align-items:center;gap:6px;padding:11px 16px 9px;border-radius:999px;font-family:var(--display);text-transform:uppercase;font-size:14px;text-decoration:none}
@@ -205,9 +220,70 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
 .compass{position:fixed;z-index:9;right:max(16px,env(safe-area-inset-right,0px));top:calc(84px + env(safe-area-inset-top,0px));width:48px;height:48px;border-radius:50%;background:var(--panel);backdrop-filter:var(--glass);display:grid;place-items:center}
 .compass svg{width:30px;height:30px}
 @media(max-width:760px){.compass{top:auto;bottom:calc(68px + env(safe-area-inset-bottom,0px));right:max(8px,env(safe-area-inset-right,0px));width:42px;height:42px}}
-.hint{position:fixed;z-index:9;left:50%;top:calc(84px + env(safe-area-inset-top,0px));transform:translateX(-50%);padding:9px 16px 7px;border-radius:999px;background:var(--panel);backdrop-filter:var(--glass);font-size:12.5px;color:rgba(246,231,201,.88);transition:opacity .6s;white-space:nowrap;pointer-events:none}
-@media(max-width:760px){.hint{top:calc(64px + env(safe-area-inset-top,0px));font-size:11.5px;padding:7px 12px 5px}}
-.loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--dem);transition:opacity .8s}
+.hint{position:fixed;z-index:9;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);padding:9px 16px 7px;border-radius:999px;background:var(--panel);backdrop-filter:var(--glass);font-size:12.5px;color:rgba(246,231,201,.88);transition:opacity .6s;white-space:nowrap;pointer-events:none}
+@media(max-width:760px){.hint{display:none}}
+body.route-on .hint{display:none}
+/* tình trạng lá: cập nhật hằng tuần */
+.status{position:fixed;z-index:9;left:50%;top:calc(84px + env(safe-area-inset-top,0px));transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 14px 7px;border-radius:999px;background:var(--giay);color:var(--than);font-size:12.5px;box-shadow:0 6px 20px rgba(6,23,20,.35);white-space:nowrap;max-width:calc(100% - 24px);transition:opacity .3s}
+.status b{color:var(--xanh)}
+.status .dot{width:9px;height:9px;border-radius:50%;background:#E2B93B;box-shadow:0 0 0 0 rgba(226,185,59,.6);animation:ping 2s infinite;flex:none}
+.status .bar{width:44px;height:5px;border-radius:3px;background:#E3D3B3;overflow:hidden;flex:none}.status .bar i{display:block;height:100%;background:linear-gradient(90deg,#E2B93B,#E07A2C,#C44125)}
+.status em{font-style:normal;color:var(--mo)}
+@keyframes ping{70%{box-shadow:0 0 0 7px rgba(226,185,59,0)}100%{box-shadow:0 0 0 0 rgba(226,185,59,0)}}
+body.touring .status,body.route-on .status{opacity:0;pointer-events:none}
+@media(max-width:760px){.status{top:calc(54px + env(safe-area-inset-top,0px));font-size:11.5px;padding:7px 11px 6px;gap:6px}.status em{display:none}.status .bar{width:32px}.status span{overflow:hidden;text-overflow:ellipsis}}
+/* gói & giá trong bảng */
+.offer{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+.offer button{text-align:left;padding:11px 12px 10px;border-radius:16px;background:var(--do);color:#fff;display:grid;gap:2px;box-shadow:0 8px 20px rgba(196,65,37,.3)}
+.offer button.alt{background:var(--kem);color:var(--than);box-shadow:none}
+.offer b{font-family:var(--display);font-weight:normal;text-transform:uppercase;font-size:17px;line-height:1}
+.offer span{font-size:12px;opacity:.9}
+.offer small{font-size:11px;opacity:.75}
+.pnote{font-size:11px;color:rgba(246,231,201,.6);margin:-8px 0 14px}
+.lstat{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:rgba(246,231,201,.08);margin:0 0 14px;font-size:12.5px;line-height:1.45;color:rgba(246,231,201,.9);text-align:left;width:100%}
+.lstat b{color:var(--vang)}
+.search{width:100%;margin:0 0 8px;padding:10px 12px;border-radius:12px;border:1.5px solid rgba(246,231,201,.18);background:rgba(246,231,201,.06);color:var(--giay);font:inherit;font-size:16px}
+.search::placeholder{color:rgba(246,231,201,.5)}
+.zl .empty{font-size:12.5px;color:rgba(246,231,201,.6);padding:4px 2px}
+/* lịch trình */
+.itin .tabs{display:flex;gap:6px;margin:4px 0 12px;flex-wrap:wrap}
+.itin .tabs button{padding:8px 14px 7px;border-radius:999px;background:var(--kem);color:var(--than);font-weight:bold;font-size:13px}
+.itin .tabs button.on{background:var(--xanh);color:var(--giay)}
+.itin .price{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;margin:0 0 12px}
+.itin .price b{font-family:var(--display);font-weight:normal;font-size:24px;color:var(--do)}
+.itin .price small{font-size:12px;color:var(--mo)}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.steps li.day{font-size:11.5px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:var(--xanh);margin:8px 0 2px}
+.steps button{width:100%;display:grid;grid-template-columns:52px 22px 1fr;gap:8px;align-items:start;text-align:left;padding:8px 8px;border-radius:12px;background:#fff;border:1.5px solid #EADCBF;color:var(--than)}
+.steps button:hover{border-color:var(--xanh)}
+.steps time{font-variant-numeric:tabular-nums;font-weight:bold;font-size:13px;color:var(--xanh);padding-top:1px}
+.steps i{width:22px;height:22px;border-radius:50%;background:var(--do);color:#fff;font-style:normal;font-size:11px;font-weight:bold;display:grid;place-items:center}
+.steps b{display:block;font-size:13.5px}
+.steps span{display:block;font-size:12.5px;color:var(--nau);line-height:1.4;margin-top:1px}
+.routebar{position:fixed;z-index:12;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);display:flex;align-items:center;gap:8px;padding:8px 8px 8px 16px;border-radius:999px;background:var(--giay);color:var(--than);box-shadow:0 10px 30px rgba(6,23,20,.45);opacity:0;pointer-events:none;transition:all .35s;max-width:calc(100% - 20px);white-space:nowrap}
+body.route-on .routebar{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.routebar b{font-size:13px;overflow:hidden;text-overflow:ellipsis}
+.routebar button{padding:9px 13px 8px;border-radius:999px;font-weight:bold;font-size:12.5px;background:var(--kem);color:var(--than);flex:none}
+.routebar button.pri{background:var(--do);color:#fff}
+@media(max-width:760px){body.route-on .dock{opacity:0;pointer-events:none}.routebar{bottom:calc(68px + env(safe-area-inset-bottom,0px));padding-left:12px}.routebar b{font-size:12px}}
+body.route-on .panel{opacity:.0;pointer-events:none}
+.lb.num .tag b{width:20px;height:20px;border-radius:50%;background:var(--do);color:#fff;display:grid;place-items:center;font-size:11px;flex:none}
+.lb.num .stem{background:var(--do)}
+/* chip chọn nhanh trong form */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chips button{padding:8px 12px 7px;border-radius:999px;background:#fff;border:1.5px solid #E3D3B3;color:var(--than);font-size:13px}
+.chips button.on{background:var(--xanh);border-color:var(--xanh);color:var(--giay)}
+.svc .price{margin:-2px 0 12px;font-size:14px;color:var(--than)}
+.svc .price b{color:var(--do);font-size:17px}
+.svc .price small{display:block;font-size:11.5px;color:var(--mo);margin-top:2px}
+/* thanh dịch vụ gọn: 2 nút chính + nút mở thêm */
+.dock button.more{display:none}
+.dock.open button.more{display:inline-flex}
+.dock button.tog svg{transition:transform .25s}
+.dock.open button.tog svg{transform:rotate(45deg)}
+.dock button em{font-style:normal;font-weight:normal;font-size:11.5px;opacity:.85}
+@media(max-width:760px){.dock.open button.more{display:flex}.dock button em{display:none}}
+.loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:linear-gradient(rgba(10,38,34,.78),rgba(10,38,34,.92)),url(og.jpg) center/cover no-repeat,var(--dem);transition:opacity .8s}
 .loader.done{opacity:0;pointer-events:none}
 .loader svg{width:70px;height:auto;display:block;margin:0 auto 18px;animation:bob 1.6s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-8px) rotate(6deg)}}
@@ -250,10 +326,13 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
 <div class="compass" title="Hướng Bắc"><svg id="needle" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 L26 20 L20 17 L14 20Z" fill="#C44125"/><path d="M20 37 L14 20 L20 23 L26 20Z" fill="#FBF4E3"/></svg></div>
 
 <aside class="panel" id="panel">
-  <button class="toggle" id="ptoggle" type="button">Điểm đến · mùa lá · lớp <span>⌃</span></button>
+  <button class="toggle" id="ptoggle" type="button">Lịch trình · giá · điểm đến <span>⌃</span></button>
   <div class="pbody">
   <h2 class="d">Rừng phong hương<br>hồ Rào Quán</h2>
   <p class="sub">Rừng phong mọc ven và ngập nước quanh hồ thủy điện Rào Quán, xã Hướng Phùng. Muốn vào rừng phải đi thuyền từ bến ở Km 13 đường Hồ Chí Minh.</p>
+  <button class="lstat" id="lstat" type="button"></button>
+  <div class="offer" id="offer"></div>
+  <p class="pnote">Giá tham khảo, báo chính xác theo ngày đi và số người.</p>
   <div class="stats">
     <div class="stat"><b>Km <span class="n" data-count="13">0</span></b><span class="l">Bến thuyền trên đường HCM nhánh Tây</span></div>
     <div class="stat"><b>~<span class="n" data-count="14">0</span> <em>km</em></b><span class="l">Cung trekking vòng hồ, khoảng 4 giờ</span></div>
@@ -274,6 +353,7 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
 
   <div class="h4">Điểm đến · bấm để lọc</div>
   <div class="sw cats" id="cats"></div>
+  <input class="search" id="q" type="search" placeholder="Tìm điểm, quán ăn, homestay…" aria-label="Tìm điểm đến" autocomplete="off">
   <div class="zl" id="zl"></div>
   <div class="ctl"><label for="ex">Độ cao phóng đại</label><input id="ex" type="range" min="1" max="3" step=".1" value="1.8"><b id="exv">1.8×</b></div>
   <div class="sw">
@@ -297,7 +377,7 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
   <ul class="w" id="cw" hidden></ul>
   <div class="meta" id="cmeta"></div>
   <div class="coord" id="cc"></div>
-  <div class="row"><a id="ctel" href="#" class="tel">Gọi</a><a id="cmap" href="#" target="_blank" rel="noopener">Google Maps ↗</a><button class="x" id="cbook" type="button">Gửi yêu cầu</button><button class="x" id="cx" type="button">Đóng</button></div>
+  <div class="row"><a id="ctel" href="#" class="tel">Gọi</a><a id="cdir" href="#" class="dir" target="_blank" rel="noopener">Chỉ đường</a><a id="cmap" href="#" target="_blank" rel="noopener" style="background:var(--kem);color:var(--than)">Google Maps ↗</a><button class="x" id="cbook" type="button">Đặt tour</button><button class="x" id="cx" type="button">Đóng</button></div>
 </div>
 
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetH">
@@ -321,16 +401,35 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
 </div>
 <div class="hint" id="hint">Kéo để xoay · Cuộn hoặc chụm để phóng to · Chạm nhãn để xem</div>
 <nav class="dock" id="dock" aria-label="Dịch vụ"></nav>
+<button class="status" id="status" type="button"></button>
+<div class="routebar" id="routebar"><b id="rbName"></b><button class="pri" id="rbBook" type="button">Đặt lịch trình này</button><button id="rbX" type="button" aria-label="Thoát lịch trình">✕</button></div>
+<div class="sheet svc itin" id="itin" role="dialog" aria-modal="true" aria-labelledby="itH">
+  <div class="in">
+    <div class="eb">Lịch trình gợi ý</div>
+    <h3 class="d" id="itH"></h3>
+    <div class="tabs" id="itTabs"></div>
+    <div class="price" id="itPrice"></div>
+    <ol class="steps" id="itSteps"></ol>
+    <div class="acts">
+      <button class="pri" id="itBook" type="button"><span>Đặt lịch trình này</span></button>
+      <button class="sec" id="itMap" type="button">Xem trên bản đồ</button>
+      <button class="x" id="itX" type="button">Đóng</button>
+    </div>
+    <small class="fine">Giờ giấc là gợi ý, điều chỉnh theo thời tiết, mực nước hồ và sức khoẻ của đoàn. Chạm một điểm để xem trên bản đồ.</small>
+  </div>
+</div>
 <div class="sheet svc" id="svc" role="dialog" aria-modal="true" aria-labelledby="svcH">
   <div class="in">
     <div class="eb" id="svcEb">Dịch vụ</div>
     <h3 class="d" id="svcH"></h3>
     <p class="lead" id="svcP"></p>
+    <div class="price" id="svcPrice"></div>
     <ul class="inc" id="svcInc"></ul>
+    <div class="chips" id="svcChips"></div>
     <form class="frm" id="svcForm" autocomplete="on">
       <label>Họ tên<input name="name" placeholder="Nguyễn Văn A" autocomplete="name" required></label>
       <label>Số điện thoại<input name="phone" type="tel" inputmode="tel" placeholder="09xx xxx xxx" autocomplete="tel" required></label>
-      <label class="full">Nội dung<textarea name="note" rows="3" placeholder="Ngày đi, số người, điểm đón, yêu cầu riêng…" required></textarea></label>
+      <label class="full">Nội dung<textarea name="note" rows="3" placeholder="Ngày đi, số người, điểm đón, yêu cầu riêng… (không bắt buộc nếu đã chọn ở trên)"></textarea></label>
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
     </form>
     <div class="acts">
@@ -709,29 +808,30 @@ function surfaceY(lat,lon){ const h=hAt(lat,lon);
 const waterY = ()=> mode==='terrain'? yOf(LAKE_M) : (lakeLevelIdx? yOf(LEVELS[lakeLevelIdx-1]+STEP*.5) : yOf(LEVELS[0]-STEP*.5))+yOf(6);
 
 /* ================= RỪNG PHONG HƯƠNG ================= */
-// Thân trụ thẳng vỏ trắng đục, cành chếch lên, tán hình trứng nhọn ngọn; một phần mọc ngập nước ven hồ.
+// Phong hương trưởng thành: thân trụ thẳng, cao, vỏ xám sáng; tán hình tháp nhọn như cây thông, xếp 4 tầng nhỏ dần lên ngọn; một phần mọc ngập nước ven hồ.
 const trees=[];
 {
   const R=GEO.phong.r_km, kx=111.32*Math.cos(latC*Math.PI/180), ky=110.57; let tries=0;
-  while(trees.length<(MOBILE?620:900) && tries<40000){ tries++;
+  while(trees.length<(MOBILE?520:760) && tries<40000){ tries++;
     const a=rnd()*Math.PI*2, r=Math.sqrt(rnd())*R*1.25;
     const lat=GEO.phong.lat+Math.sin(a)*r/ky, lon=GEO.phong.lon+Math.cos(a)*r/kx;
     const sd=shoreDist(lat,lon);
     if(sd<-3) continue;                               // giữa hồ sâu
     if(sd>0 && rnd()>Math.exp(-sd/4.5)) continue;     // thưa dần khi xa bờ
     if(sd<=0 && rnd()>.45) continue;
-    trees.push({lat,lon,drown:sd<=0,H:(1.15+rnd()*.7),t:rnd(),rot:rnd()*6.28,j:[rnd(),rnd(),rnd(),rnd(),rnd(),rnd()]});
+    trees.push({lat,lon,drown:sd<=0,H:(1.9+rnd()*1.1),t:rnd(),rot:rnd()*6.28,j:[rnd(),rnd(),rnd(),rnd(),rnd(),rnd()]});
   }
 }
-const NT=trees.length, CL=6, BR=4;
-const trunkGeo=new THREE.CylinderGeometry(.55,1,1,7); trunkGeo.translate(0,.5,0);
+const NT=trees.length, CL=5, BR=4;
+const trunkGeo=new THREE.CylinderGeometry(.45,1,1,7); trunkGeo.translate(0,.5,0);
 const brGeo=new THREE.CylinderGeometry(.4,1,1,4); brGeo.translate(0,.5,0);
-const clumpGeo=new THREE.IcosahedronGeometry(1,1);
+const clumpGeo=new THREE.ConeGeometry(1,1,8,1); clumpGeo.translate(0,.5,0);   // tầng tán hình nón, gốc tại y=0
 const barkMat=new THREE.MeshStandardMaterial({color:0xD9D0BF,roughness:.8});
 const crownMat=new THREE.MeshStandardMaterial({roughness:.75,flatShading:true});
 const trunks=new THREE.InstancedMesh(trunkGeo,barkMat,NT), branches=new THREE.InstancedMesh(brGeo,barkMat,NT*BR), crowns=new THREE.InstancedMesh(clumpGeo,crownMat,NT*CL);
 [trunks,branches,crowns].forEach(m=>{m.castShadow=true;m.receiveShadow=true;scene.add(m);});
-const CLUMP=[[0,.97,0,.13,1.45],[.09,.82,0,.17,1.3],[-.06,.8,.08,.16,1.3],[0,.66,-.1,.2,1.15],[.1,.6,.09,.19,1.1],[-.11,.55,-.02,.18,1.05]];
+// [lệch x, cao gốc tầng (tỷ lệ H), lệch z, bán kính tầng, chiều cao tầng]: 5 tầng nón nhỏ dần, gối lên nhau thành tháp nhọn
+const CLUMP=[[0,.30,0,.21,.30],[0,.45,0,.19,.28],[0,.59,0,.16,.26],[0,.72,0,.12,.24],[0,.84,0,.075,.22]];
 const _m=new THREE.Matrix4(), _q=new THREE.Quaternion(), _s=new THREE.Vector3(), _p=new THREE.Vector3(), _e=new THREE.Euler(), _c=new THREE.Color();
 let month=3; const leafCols=LEAFC.map(c=>new THREE.Color(c));
 function layoutTrees(){
@@ -739,11 +839,11 @@ function layoutTrees(){
   trees.forEach((t,i)=>{ const H=t.H, x=toX(t.lon), z=toZ(t.lat);
     const y0 = t.drown ? waterY()-yOf(18) : surfaceY(t.lat,t.lon)-.05;
     let k=cum.findIndex(v=>t.t<=v); if(k<0)k=4;
-    _p.set(x,y0,z); _q.setFromEuler(_e.set(0,t.rot,0)); _s.set(.045*H, H+(t.drown?yOf(18):0), .045*H); trunks.setMatrixAt(i,_m.compose(_p,_q,_s));
+    _p.set(x,y0,z); _q.setFromEuler(_e.set(0,t.rot,0)); _s.set(.03*H, H*.9+(t.drown?yOf(18):0), .03*H); trunks.setMatrixAt(i,_m.compose(_p,_q,_s));
     const top=y0+(t.drown?yOf(18):0);
-    for(let b=0;b<BR;b++){ _p.set(x,top+H*(.42+b*.11),z); _q.setFromEuler(_e.set(.75+t.j[b]*.2,t.rot+b*1.57,0,'YXZ')); _s.set(.016*H,H*(.22-b*.03),.016*H); branches.setMatrixAt(i*BR+b,_m.compose(_p,_q,_s)); }
+    for(let b=0;b<BR;b++){ _p.set(x,top+H*(.28+b*.14),z); _q.setFromEuler(_e.set(1.15+t.j[b]*.2,t.rot+b*1.57+.6,0,'YXZ')); _s.set(.012*H,H*(.19-b*.03),.012*H); branches.setMatrixAt(i*BR+b,_m.compose(_p,_q,_s)); }
     const c=Math.cos(t.rot), s=Math.sin(t.rot), sc=k===4?0:1;
-    CLUMP.forEach(([ox,oy,oz,r,sy],q)=>{ _p.set(x+(ox*c-oz*s)*H, top+oy*H, z+(ox*s+oz*c)*H); _q.identity(); const rr=r*H*(.9+t.j[q]*.25)*sc; _s.set(rr,rr*sy,rr);
+    CLUMP.forEach(([ox,oy,oz,r,sy],q)=>{ _p.set(x, top+oy*H, z); _q.setFromEuler(_e.set(0,t.rot+q*.4,0)); const rr=r*H*(.9+t.j[q]*.22)*sc; _s.set(rr,sy*H*(.95+t.j[q]*.1)*(sc||.001),rr);
       crowns.setMatrixAt(i*CL+q,_m.compose(_p,_q,_s)); let kk=k; if(k>0&&k<4&&t.j[q]<.3) kk=k-1;
       const hsl={}; _c.copy(leafCols[kk]).getHSL(hsl); _c.setHSL(hsl.h+(t.j[q]-.5)*.03,hsl.s,Math.min(1,Math.max(0,hsl.l+(t.j[q]-.5)*.12))); crowns.setColorAt(i*CL+q,_c); });
   });
@@ -864,7 +964,7 @@ function updateLabels(){
   const w=innerWidth,h=innerHeight, placed=[], camDist=camera.position.distanceTo(controls.target);
   const pr=document.getElementById('panel').getBoundingClientRect(); const panelOn=w>=760 && !document.body.classList.contains('touring');
   const tb=document.getElementById('tour').getBoundingClientRect(); const tourOn=document.body.classList.contains('touring');
-  const dr=tourOn?null:document.getElementById('dock').getBoundingClientRect(); const topH=document.querySelector('.top').getBoundingClientRect().bottom;
+  const dr=tourOn?null:document.getElementById('dock').getBoundingClientRect(); const stEl=document.getElementById('status'); const topH=Math.max(document.querySelector('.top').getBoundingClientRect().bottom, (routeOn||touring)?0:stEl.getBoundingClientRect().bottom+4);
   for(const o of LABELS){
     const road=o.el.classList.contains('road');
     v3.set(toX(o.lon),Math.max(surfaceY(o.lat,o.lon),inLake(o.lat,o.lon)?waterY():0)+o.lift+(road?0.8:0),toZ(o.lat)).project(camera);
@@ -881,7 +981,7 @@ function updateLabels(){
       const box=(bw,bh)=>{const x0=sx-bw/2,y0=road?sy-bh/2:sy-bh;return [x0-3,y0-3,x0+bw+3,y0+bh+3];};
       const ok=R=>!placed.some(p=>hit(p,R)) && !hit(R,[0,0,w,topH]) && !(panelOn&&hit(R,[pr.left,pr.top,pr.right,pr.bottom])) && !(tourOn&&hit(R,[tb.left,tb.top,tb.right,tb.bottom])) && !(dr&&hit(R,[dr.left,dr.top,dr.right,dr.bottom])) && R[0]>=0 && R[2]<=w && R[1]>=0;
       let R=box(...o.sz);
-      if(!ok(R)){ if(o.el.classList.contains('zone')){R=box(24,40);dot=true;if(!ok(R))vis=false;} else vis=false; }
+      if(!ok(R)){ if(o.el.classList.contains('zone')){R=box(24,40);dot=true;if(!ok(R) && !o.el.classList.contains('num'))vis=false;} else vis=false; }
       if(vis) placed.push(R);
     }
     o.el.classList.toggle('dot',dot); o.el.classList.toggle('hide',!vis);
@@ -892,10 +992,16 @@ function updateLabels(){
 /* ================= UI ================= */
 const zl=document.getElementById('zl');
 POIS.forEach(p=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<i style="background:${CAT[p.cat].color}"></i>${p.name}<small>${CAT[p.cat].label}</small>`;b.onclick=()=>focusPoi(p);b.dataset.id=p.id;b.dataset.cat=p.cat;zl.appendChild(b);});
+const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
+const zlEmpty=document.createElement('div'); zlEmpty.className='empty'; zlEmpty.textContent='Không tìm thấy điểm phù hợp.'; zlEmpty.hidden=true; zl.appendChild(zlEmpty);
+function filterList(){ const q=norm(document.getElementById('q').value.trim()); let n=0;
+  zl.querySelectorAll('button').forEach(x=>{ const p=POIS.find(o=>o.id===x.dataset.id); const ok=!hiddenCats.has(x.dataset.cat) && (!q || norm(p.name+' '+(p.addr||'')+' '+CAT[p.cat].label).includes(q)); x.hidden=!ok; if(ok)n++; });
+  zlEmpty.hidden=n>0; }
+document.getElementById('q').addEventListener('input',filterList);
 const catsEl=document.getElementById('cats');
 Object.entries(CAT).forEach(([k,c])=>{const b=document.createElement('button');b.type='button';b.className='on';b.innerHTML=`<i style="background:${c.color}"></i>${c.label} <small>${POIS.filter(p=>p.cat===k).length}</small>`;
   b.onclick=()=>{ const off=!hiddenCats.has(k); off?hiddenCats.add(k):hiddenCats.delete(k); b.classList.toggle('on',!off); b.classList.toggle('off',off);
-    zl.querySelectorAll('button').forEach(x=>x.hidden=hiddenCats.has(x.dataset.cat)); };
+    filterList(); };
   catsEl.appendChild(b);});
 const card=document.getElementById('card');
 function openCard(p){
@@ -905,7 +1011,7 @@ function openCard(p){
   document.getElementById('cc').textContent=`${p.lat.toFixed(5)}°B, ${p.lon.toFixed(5)}°Đ · cao ~${Math.round(inLake(p.lat,p.lon)?LAKE_M:hAt(p.lat,p.lon))} m`;
   const meta=[]; if(p.rating) meta.push(`<div><span>Google Maps</span> ${p.rating}</div>`); if(p.addr) meta.push(`<div><span>Địa chỉ</span> ${p.addr}</div>`); if(p.phone) meta.push(`<div><span>Điện thoại</span> ${p.phone.replace(/(\d{4})(\d{3})(\d+)/,'$1 $2 $3')}</div>`);
   document.getElementById('cmeta').innerHTML=meta.join(''); const tel=document.getElementById('ctel'); tel.hidden=!p.phone; tel.href='tel:'+(p.phone||'');
-  document.getElementById('cmap').href=gmaps(p.lat,p.lon); card.classList.add('show'); document.body.classList.add('card-on');
+  document.getElementById('cmap').href=gmaps(p.lat,p.lon); document.getElementById('cdir').href=`https://www.google.com/maps/dir/?api=1&destination=${p.lat.toFixed(6)},${p.lon.toFixed(6)}`; card.classList.add('show'); document.body.classList.add('card-on');
   zl.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===p.id));
 }
 document.getElementById('cx').onclick=()=>{card.classList.remove('show');document.body.classList.remove('card-on');zl.querySelectorAll('button').forEach(b=>b.classList.remove('on'));};
@@ -915,7 +1021,7 @@ function flyTo(tgt,dist=60,dirOverride){ const dir=(dirOverride||camera.position
 const at=(lat,lon,dy=0)=>new THREE.Vector3(toX(lon),Math.max(surfaceY(lat,lon),inLake(lat,lon)?waterY():0)+dy,toZ(lat));
 function focusPoi(p){ openCard(p); flyTo(at(p.lat,p.lon), p.big?(MOBILE?60:42):(MOBILE?70:52)); if(MOBILE) document.getElementById('panel').classList.remove('open'); }
 function setRotate(v){controls.autoRotate=v;document.getElementById('bRotate').classList.toggle('on',v);}
-function relayout(){ layoutTrees(); layoutWind(); buildBoat(); placeRings(); }
+function relayout(){ layoutTrees(); layoutWind(); buildBoat(); placeRings(); if(typeof drawRoute==='function' && routeOn) drawRoute(); }
 function setMode(m){ mode=m; document.querySelectorAll('.modes button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
   terrainGroup.visible=water.visible=(m==='terrain'); layerGroup.visible=(m!=='terrain'); relayout(); }
 document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{ if(touring) stopTour(); setMode(b.dataset.mode); });
@@ -972,7 +1078,33 @@ const ICO={
   stay:'<svg viewBox="0 0 20 20"><path d="M3 16V8M3 12h14v4M3 12V9.5h7V12M17 16v-4a2 2 0 0 0-2-2h-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="6" cy="9" r="1.3" fill="currentColor"/></svg>',
   contact:'<svg viewBox="0 0 20 20"><path d="M3 4h14v9H8l-4 3.5V13H3z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M6.5 7.5h7M6.5 10h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>'
 };
+ICO.route='<svg viewBox="0 0 20 20"><circle cx="5" cy="5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="15" cy="15" r="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M7 5h5a3 3 0 0 1 0 6H8a3 3 0 0 0 0 6h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+ICO.more='<svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>';
 const SHORT={tour:'Tour',boat:'Thuyền',guide:'HDV',photo:'Ảnh',car:'Xe',stay:'Nghỉ',contact:'Nhắn'};
+/* ====== GIÁ THAM KHẢO: sửa tại đây ====== */
+const PRICE={
+  tour1:{label:'1 ngày', from:'1.200.000đ', unit:'/người'},
+  tour2:{label:'2N1Đ', from:'2.900.000đ', unit:'/người'},
+  boat:{from:'500.000đ', unit:'/chuyến', note:'4–8 người, 60–90 phút'},
+  guide:{from:'600.000đ', unit:'/ngày/đoàn', note:'Trekking vòng hồ, săn mây'},
+  photo:{from:'1.500.000đ', unit:'/buổi', note:'2–3 giờ, ~30 ảnh chỉnh màu'},
+  car:{from:'900.000đ', unit:'/chiều', note:'Xe 4 chỗ Đông Hà ⇄ Khe Sanh · xe máy từ 150.000đ/ngày'},
+  stay:{from:'300.000đ', unit:'/đêm', note:'Homestay; khách sạn trung tâm từ ~350.000đ'},
+  contact:{text:'Tư vấn miễn phí'}
+};
+/* ====== TÌNH TRẠNG LÁ: cập nhật hằng tuần ====== */
+const STATUS={date:'28/10/2026', month:1, pct:20, short:'Lá ngả vàng ~20%', text:'Lá ngả vàng lác đác ven hồ, chưa đỏ. Dự kiến đỏ đẹp nhất khoảng 15/12 – 5/1.', best:'15/12 – 5/1'};
+const CHIPS={
+  tour:['Tour 1 ngày','Tour 2N1Đ','Cuối tuần này','2 người','Nhóm 4–6 người','Cần xe đón Đông Hà/Huế'],
+  boat:['Sáng sớm','Buổi chiều','2–4 người','5–8 người','Có trẻ em'],
+  guide:['Trekking vòng hồ','Săn mây Cu Vơ','Leo Voi Mẹp','Cắm trại qua đêm'],
+  photo:['Cá nhân','Cặp đôi','Nhóm bạn','Gia đình','Có flycam'],
+  car:['Từ Đông Hà','Từ Huế','Từ Đà Nẵng','Xe 7 chỗ','Thuê xe máy'],
+  stay:['1 đêm','2 đêm','Homestay','Khách sạn','Cắm trại ven hồ'],
+  contact:['Hỏi tình trạng lá','Hỏi mực nước hồ','Ghép đoàn cuối tuần']
+};
+const priceHTML=id=>{ if(id==='tour') return `<b>Từ ${PRICE.tour1.from}</b>${PRICE.tour1.unit} (1 ngày) · <b>${PRICE.tour2.from}</b>${PRICE.tour2.unit} (2N1Đ)<small>Giá tham khảo, báo chính xác theo ngày đi và số người.</small>`;
+  const q=PRICE[id]; if(!q) return ''; if(q.text) return `<b>${q.text}</b>`; return `<b>Từ ${q.from}</b>${q.unit}${q.note?` · ${q.note}`:''}<small>Giá tham khảo, báo chính xác theo ngày đi và số người.</small>`; };
 const SERVICES=[
   {id:'tour', label:'Đặt tour', hot:true, h:'Tour rừng phong hương', p:'Tour 1 ngày hoặc 2 ngày 1 đêm từ Khe Sanh: thuyền ra rừng phong ngập nước, săn mây Cu Vơ, cà phê đồi và di tích Tà Cơn. Đẹp nhất giữa tháng 12 đến đầu tháng 1.',
    inc:['Thuyền máy có người lái, áo phao cho cả đoàn','Hướng dẫn viên bản địa Vân Kiều – Pa Kô','Ăn trưa đặc sản, nước uống, bảo hiểm du lịch','Tùy chọn: xe đưa đón Đông Hà, Huế, Đà Nẵng']},
@@ -991,12 +1123,22 @@ const SERVICES=[
 ];
 const dock=document.getElementById('dock'), svc=document.getElementById('svc'), svcForm=document.getElementById('svcForm');
 let curSvc=null;
-SERVICES.forEach(s=>{const b=document.createElement('button');b.type='button';b.className=s.hot?'hot':'';b.title=s.label;b.setAttribute('aria-label',s.label);b.innerHTML=ICO[s.id]+'<span>'+s.label+'</span><small>'+SHORT[s.id]+'</small>';b.onclick=()=>openSvc(s);dock.appendChild(b);});
-function openSvc(s){ curSvc=s; document.getElementById('svcH').textContent=s.h; document.getElementById('svcP').textContent=s.p;
+const mkDock=(cls,ico,label,short,fn,title)=>{const b=document.createElement('button');b.type='button';b.className=cls;b.title=title||label;b.setAttribute('aria-label',title||label);b.innerHTML=ico+'<span>'+label+'</span><small>'+short+'</small>';b.onclick=fn;dock.appendChild(b);return b;};
+mkDock('hot',ICO.tour,`Đặt tour <em>· từ ${PRICE.tour1.from.replace('.000.000đ',' tr').replace('.200.000đ',',2 tr')}</em>`,'Tour',()=>openSvc(SERVICES[0]),'Đặt tour');
+mkDock('',ICO.route,'Lịch trình gợi ý','Lịch',()=>openItin(0));
+SERVICES.slice(1).forEach(s=>mkDock('more',ICO[s.id],s.label,SHORT[s.id],()=>{dock.classList.remove('open');openSvc(s);}));
+const tgl=mkDock('tog',ICO.more,'Dịch vụ khác','Thêm',()=>{dock.classList.toggle('open'); tgl.querySelector('span').textContent=dock.classList.contains('open')?'Thu gọn':'Dịch vụ khác'; tgl.querySelector('small').textContent=dock.classList.contains('open')?'Gọn':'Thêm';});
+let chipSel=new Set();
+function openSvc(s,pre){ curSvc=s; document.getElementById('svcH').textContent=s.h; document.getElementById('svcP').textContent=s.p;
+  document.getElementById('svcPrice').innerHTML=priceHTML(s.id);
   document.getElementById('svcInc').innerHTML=s.inc.map(x=>`<li>${x}</li>`).join(''); document.getElementById('svcEb').textContent='Dịch vụ · '+s.label;
-  svc.classList.add('show'); document.body.classList.add('sheet-open'); if(MOBILE) document.getElementById('panel').classList.remove('open'); }
+  chipSel=new Set(pre||[]); const ch=document.getElementById('svcChips'); ch.innerHTML='';
+  (CHIPS[s.id]||[]).concat((pre||[]).filter(x=>!(CHIPS[s.id]||[]).includes(x))).forEach(c=>{const b=document.createElement('button');b.type='button';b.textContent=c;b.classList.toggle('on',chipSel.has(c));b.onclick=()=>{chipSel.has(c)?chipSel.delete(c):chipSel.add(c);b.classList.toggle('on');};ch.appendChild(b);});
+  closeItin(); svc.classList.add('show'); document.body.classList.add('sheet-open'); if(MOBILE) document.getElementById('panel').classList.remove('open'); }
 function closeSvc(){ svc.classList.remove('show'); document.body.classList.remove('sheet-open'); }
 async function sendSvc(){ const f=svcForm; if(!f.reportValidity()) return; const d=new FormData(f);
+  const picks=[...chipSel].join(' · '); const note=[picks&&('['+picks+']'), (d.get('note')||'').trim()].filter(Boolean).join(' ');
+  if(!note){ showToast('Chọn một gợi ý hoặc ghi vài dòng nội dung'); f.elements.note.focus(); return; } d.set('note',note);
   const btn=document.getElementById('svcSend'); btn.disabled=true; btn.querySelector('span').textContent='Đang gửi…';
   const body={_subject:`[rungphonghuong.com] ${curSvc.label}: ${d.get('name')} · ${d.get('phone')}`, _template:'table', _captcha:'false',
     'Dịch vụ':curSvc.label, 'Họ tên':d.get('name'), 'Số điện thoại':d.get('phone'), 'Nội dung':d.get('note'), 'Trang':location.href};
@@ -1004,14 +1146,89 @@ async function sendSvc(){ const f=svcForm; if(!f.reportValidity()) return; const
   try{ const r=await fetch(NOTIFY.endpoint,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)}); ok=r.ok; }catch(e){}
   if(NOTIFY.telegram&&NOTIFY.telegram.token){ try{ await fetch(`https://api.telegram.org/bot${NOTIFY.telegram.token}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:NOTIFY.telegram.chat,text:`${curSvc.label}\n${d.get('name')} · ${d.get('phone')}\n${d.get('note')}`})}); ok=true; }catch(e){} }
   btn.disabled=false; btn.querySelector('span').textContent='Gửi yêu cầu';
-  if(ok){ showToast('Đã gửi. Chúng tôi sẽ liên hệ lại sớm.'); f.reset(); closeSvc(); } else showToast('Chưa gửi được, vui lòng thử lại sau.'); }
+  if(ok){ showToast('Đã gửi. Chúng tôi sẽ liên hệ lại sớm.'); f.reset(); chipSel.clear(); closeSvc(); } else showToast('Chưa gửi được, vui lòng thử lại sau.'); }
 const toast=document.getElementById('toast'); let toastT;
 function showToast(s){ toast.textContent=s; toast.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>toast.classList.remove('on'),2600); }
 document.getElementById('svcSend').onclick=sendSvc;
 svcForm.addEventListener('submit',e=>{e.preventDefault();sendSvc();});
 document.getElementById('svcX').onclick=closeSvc; svc.addEventListener('click',e=>{if(e.target===svc)closeSvc();});
 // nút trong thẻ điểm đến: đặt tour tới điểm này
-document.getElementById('cbook').onclick=()=>{ const s=SERVICES[0]; openSvc(s); const n=svcForm.elements.note; if(n && !n.value) n.value='Muốn đi: '+document.getElementById('ct').textContent; };
+document.getElementById('cbook').onclick=()=>{ openSvc(SERVICES[0],['Muốn đi: '+document.getElementById('ct').textContent]); };
+
+const PP=id=>POIS.find(p=>p.id===id);
+/* ================= TÌNH TRẠNG LÁ ================= */
+{ const st=document.getElementById('status');
+  st.innerHTML=`<i class="dot"></i><span><b>Lá ${STATUS.date.slice(0,5)}</b> · ${STATUS.short}</span><i class="bar"><i style="width:${STATUS.pct}%"></i></i><em>Đẹp nhất ${STATUS.best}</em>`;
+  document.getElementById('lstat').innerHTML=`<i class="dot" style="width:10px;height:10px;border-radius:50%;background:#E2B93B;flex:none"></i><span><b>Cập nhật ${STATUS.date}:</b> ${STATUS.text}</span>`;
+  const showStatus=()=>{ exitRoute(); setMonth(STATUS.month); const p=PP('phong'); focusPoi(p); showToast('Đang hiển thị màu lá theo cập nhật '+STATUS.date.slice(0,5)); };
+  st.onclick=showStatus; document.getElementById('lstat').onclick=showStatus;
+  const ph=POIS.find(p=>p.id==='phong'); if(ph) ph.desc+=` Cập nhật ${STATUS.date}: ${STATUS.text}`; }
+
+/* ================= LỊCH TRÌNH GỢI Ý ================= */
+const ITINS=[
+ {name:'1 ngày', title:'1 ngày: mây Cu Vơ · thuyền vào rừng phong · Tà Cơn', price:PRICE.tour1, chip:'Tour 1 ngày', steps:[
+  ['05:30','cuvo','Săn mây, đón bình minh trên đỉnh Cu Vơ'],
+  ['07:00','g_bunboohong','Ăn sáng bún bò ở trung tâm Khe Sanh'],
+  ['08:15','caycodon','Dừng chụp ảnh cây cô đơn bên hồ'],
+  ['08:45','ben','Mặc áo phao, lên thuyền ở bến Km 13'],
+  ['09:00','phong','Thuyền len giữa rừng phong ngập nước, 60–90 phút'],
+  ['11:30','g_khesanhcoffeef','Cà phê Khe Sanh nhìn ra đồi'],
+  ['12:30','g_quanlaoletran','Ăn trưa đặc sản Lào'],
+  ['14:30','tacon','Di tích sân bay Tà Cơn'],
+  ['16:30','santan','Hoàng hôn giữa các tua-bin điện gió']]},
+ {name:'2 ngày 1 đêm', title:'2N1Đ: rừng phong · Chênh Vênh · thác Tà Puồng', price:PRICE.tour2, chip:'Tour 2N1Đ', steps:[
+  ['Ngày 1'],
+  ['08:00','khesanh','Tập trung ở trung tâm Khe Sanh'],
+  ['08:30','tacon','Tham quan sân bay Tà Cơn'],
+  ['09:45','ben','Lên thuyền ở bến Km 13'],
+  ['10:00','phong','Thuyền vào rừng phong ngập nước'],
+  ['12:30','huongphung','Ăn trưa ở trung tâm xã Hướng Phùng'],
+  ['14:30','chenhvenh','Bản Chênh Vênh, làng du lịch cộng đồng'],
+  ['15:30','thaccv','Thác Chênh Vênh'],
+  ['17:30','g_huongphunghome','Nhận phòng homestay, cơm tối bản'],
+  ['Ngày 2'],
+  ['07:00','dongtapuong','Đồng lúa Tà Puồng buổi sáng'],
+  ['08:00','tapuong','Đi bộ ~900 m tới thác Tà Puồng'],
+  ['12:00','g_dacsanlaosfood','Ăn trưa ở Khe Sanh'],
+  ['14:00','langvay','Di tích căn cứ Làng Vây'],
+  ['15:30','laobao','Di tích nhà tù Lao Bảo'],
+  ['17:00','homi','Cà phê hoàng hôn ven QL9']]}
+];
+ITINS.forEach(it=>it.steps=it.steps.filter(s=>s.length===1||PP(s[1])));
+const itinEl=document.getElementById('itin'); let curItin=0;
+function renderItin(i){ curItin=i; const it=ITINS[i];
+  document.getElementById('itH').textContent=it.title;
+  document.getElementById('itTabs').innerHTML=ITINS.map((x,k)=>`<button type="button" class="${k===i?'on':''}" data-k="${k}">${x.name}</button>`).join('');
+  document.getElementById('itTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>renderItin(+b.dataset.k));
+  document.getElementById('itPrice').innerHTML=`<b>Từ ${it.price.from}</b><span>${it.price.unit}</span><small>Giá tham khảo · thuyền, HDV, ăn uống theo lịch trình</small>`;
+  let n=0; document.getElementById('itSteps').innerHTML=it.steps.map(s=>{ if(s.length===1) return `<li class="day">${s[0]}</li>`; n++; const p=PP(s[1]);
+    return `<li><button type="button" data-id="${s[1]}"><time>${s[0]}</time><i>${n}</i><div><b>${p.short||p.name}</b><span>${s[2]}</span></div></button></li>`; }).join('');
+  document.getElementById('itSteps').querySelectorAll('button').forEach(b=>b.onclick=()=>{ startRoute(curItin,false); closeItin(); focusPoi(PP(b.dataset.id)); }); }
+function openItin(i){ renderItin(i||0); closeSvc(); itinEl.classList.add('show'); document.body.classList.add('sheet-open'); if(MOBILE) document.getElementById('panel').classList.remove('open'); }
+function closeItin(){ itinEl.classList.remove('show'); if(!svc.classList.contains('show')) document.body.classList.remove('sheet-open'); }
+document.getElementById('itX').onclick=closeItin; itinEl.addEventListener('click',e=>{if(e.target===itinEl)closeItin();});
+document.getElementById('itBook').onclick=()=>openSvc(SERVICES[0],[ITINS[curItin].chip]);
+document.getElementById('itMap').onclick=()=>{ closeItin(); startRoute(curItin,true); };
+document.getElementById('offer').innerHTML=ITINS.map((it,k)=>`<button type="button" class="${k?'alt':''}" data-k="${k}"><b>${it.name}</b><span>Từ ${it.price.from}${it.price.unit}</span><small>${it.steps.filter(s=>s.length>1).length} điểm · xem lịch trình</small></button>`).join('');
+document.getElementById('offer').querySelectorAll('button').forEach(b=>b.onclick=()=>openItin(+b.dataset.k));
+// đường đi của lịch trình trên sa bàn
+var routeOn=false; let routeIdx=0, routeLine=null, routeLabels=[];
+const routeMat=new THREE.LineDashedMaterial({color:0xC44125,dashSize:1.4,gapSize:.8,transparent:true,opacity:.95,depthTest:false});
+function routePts(){ return ITINS[routeIdx].steps.filter(s=>s.length>1).map(s=>PP(s[1])); }
+function drawRoute(){ if(routeLine){scene.remove(routeLine);routeLine.geometry.dispose();}
+  const ps=routePts().map(p=>at(p.lat,p.lon,1.2)); const pts=[];
+  for(let i=1;i<ps.length;i++){ const a=ps[i-1],b=ps[i],d=a.distanceTo(b); for(let k=0;k<=16;k++){const u=k/16; const v=a.clone().lerp(b,u); v.y+=Math.sin(u*Math.PI)*Math.min(14,d*.18); pts.push(v);} }
+  routeLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),routeMat); routeLine.computeLineDistances(); routeLine.renderOrder=6; scene.add(routeLine); }
+function startRoute(i,fit){ exitRoute(true); routeIdx=i; routeOn=true; document.body.classList.add('route-on');
+  const ps=routePts(); routeLabels=ps.map((p,k)=>addLabel({lat:p.lat,lon:p.lon,cls:'num zone',prio:0,lift:1.6,key:'rt'+k,html:`<div class="tag"><b>${k+1}</b><span>${p.short||p.name}</span></div>`,onClick:()=>focusPoi(p)}));
+  tourKeys=ps.map((p,k)=>'rt'+k); drawRoute(); document.getElementById('rbName').textContent='Lịch trình '+ITINS[i].name+' · '+ps.length+' điểm';
+  card.classList.remove('show'); document.body.classList.remove('card-on');
+  if(fit){ const v=ps.map(p=>at(p.lat,p.lon)); const c=v.reduce((s,x)=>s.add(x),new THREE.Vector3()).multiplyScalar(1/v.length); let r=0; v.forEach(x=>r=Math.max(r,Math.hypot(x.x-c.x,x.z-c.z)));
+    flyRaw(c.clone().add(new THREE.Vector3(.35,1.1,.9).normalize().multiplyScalar(Math.max(80,r*(MOBILE?5.2:2.7)))),c,2200); setRotate(false); } }
+function exitRoute(keep){ if(!routeOn) return; routeOn=false; document.body.classList.remove('route-on'); if(routeLine){scene.remove(routeLine);routeLine.geometry.dispose();routeLine=null;}
+  routeLabels.forEach(o=>{o.el.remove(); const k=LABELS.indexOf(o); if(k>=0) LABELS.splice(k,1);}); routeLabels=[]; if(!touring) tourKeys=null; }
+document.getElementById('rbX').onclick=()=>exitRoute();
+document.getElementById('rbBook').onclick=()=>openSvc(SERVICES[0],[ITINS[routeIdx].chip]);
 
 /* ================= TRÌNH CHIẾU ================= */
 let touring=false, step=0, stepStart=0, ride=null, monthAnim=null;
@@ -1043,13 +1260,13 @@ function goStep(i){ step=(i+STEPS.length)%STEPS.length; stepStart=performance.no
   document.getElementById('tEb').textContent=`${String(step+1).padStart(2,'0')} / ${String(STEPS.length).padStart(2,'0')} · ${s.eb}`;
   document.getElementById('tH').textContent=s.h; document.getElementById('tP').textContent=s.p; document.getElementById('tBox').classList.toggle('warn',!!s.warn);
   tourKeys=s.keys; ride=null; monthAnim=null; s.go(); }
-function startTour(){ touring=true; document.body.classList.add('touring'); card.classList.remove('show'); sheet.classList.remove('show'); closeSvc(); document.getElementById('panel').classList.remove('open'); goStep(0); }
+function startTour(){ exitRoute(); closeItin(); touring=true; document.body.classList.add('touring'); card.classList.remove('show'); sheet.classList.remove('show'); closeSvc(); document.getElementById('panel').classList.remove('open'); goStep(0); }
 function stopTour(){ touring=false; ride=null; monthAnim=null; tourKeys=null; hideBig(); document.body.classList.remove('touring'); }
 document.getElementById('playBtn').onclick=()=>touring?stopTour():startTour();
 document.getElementById('tStop').onclick=stopTour;
 document.getElementById('tNext').onclick=()=>goStep(step+1);
 document.getElementById('tPrev').onclick=()=>goStep(step-1);
-addEventListener('keydown',e=>{ if(e.key==='Escape'){sheet.classList.remove('show'); closeSvc(); if(touring) stopTour();} if(!touring) return; if(e.key==='ArrowRight')goStep(step+1); if(e.key==='ArrowLeft')goStep(step-1); });
+addEventListener('keydown',e=>{ if(e.key==='Escape'){sheet.classList.remove('show'); closeSvc(); closeItin(); exitRoute(); if(touring) stopTour();} if(!touring) return; if(e.key==='ArrowRight')goStep(step+1); if(e.key==='ArrowLeft')goStep(step-1); });
 
 /* ================= VÒNG LẶP ================= */
 setMode('terrain'); setMonth(3);
@@ -1079,7 +1296,7 @@ function tick(){
   if(!reduce){ turbines.forEach((h,i)=>h.rotation.z-=dt*(1.3+i%3*.2));
     const fall = treesOn && month>=2 && month<=4; leaves.visible=fall;
     if(fall){ for(let i=0;i<LC;i++){const l=ldat[i]; l.ph+=dt; l.y-=l.v*dt*.18; if(l.y<0){l.y=1; l.t=trees[Math.floor(Math.random()*NT)];}
-      const tr=l.t, top=(tr.drown?waterY():surfaceY(tr.lat,tr.lon))+tr.H, base=tr.drown?waterY():surfaceY(tr.lat,tr.lon);
+      const tr=l.t, top=(tr.drown?waterY():surfaceY(tr.lat,tr.lon))+tr.H*.95, base=tr.drown?waterY():surfaceY(tr.lat,tr.lon);
       lpos[i*3]=toX(tr.lon)+Math.sin(l.ph*1.7+i)*.6; lpos[i*3+1]=base+(top-base)*l.y+.05; lpos[i*3+2]=toZ(tr.lat)+Math.cos(l.ph*1.3+i)*.6;}
       lgeo.attributes.position.needsUpdate=true; } }
   else leaves.visible=false;
