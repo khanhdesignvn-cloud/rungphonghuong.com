@@ -19,6 +19,7 @@ __FONTS__
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--dem);color:var(--giay);font-family:var(--body);-webkit-font-smoothing:antialiased}
+body{position:fixed;inset:0;overscroll-behavior:none;-webkit-text-size-adjust:100%}
 #stage{position:fixed;inset:0;background:radial-gradient(120% 85% at 50% 0%,#1E5F54 0%,#0E3530 45%,#061714 100%)}
 canvas{display:block;outline:none}
 .d{font-family:var(--display);font-weight:normal;text-transform:uppercase;letter-spacing:.01em;line-height:.95}
@@ -59,7 +60,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--vang);outline-offse
 .lb.hide{opacity:0;pointer-events:none}
 .lb.dot .tag span{display:none}.lb.dot .tag{padding:6px}
 
-.panel{position:fixed;z-index:10;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:360px;max-height:calc(100% - 130px);overflow:auto;border-radius:24px;background:var(--panel);backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);padding:18px;scrollbar-width:thin;transition:opacity .4s,transform .4s}
+.panel{position:fixed;z-index:10;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:360px;max-height:calc(100% - 130px);display:flex;flex-direction:column;border-radius:24px;background:var(--panel);backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);padding:18px;transition:opacity .4s,transform .4s}
+.pbody{overflow:auto;min-height:0;scrollbar-width:thin;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .panel h2{font-size:30px;margin:0 0 6px;text-wrap:balance;color:var(--kem)}
 .panel .sub{font-size:13px;color:rgba(246,231,201,.78);margin:0 0 14px;line-height:1.5}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
@@ -93,9 +95,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--vang);outline-offse
 .badge{display:inline-block;margin-top:10px;padding:5px 10px 4px;border-radius:999px;background:var(--do);color:#fff;font-size:11px;font-weight:bold;letter-spacing:.04em}
 .toggle{display:none}
 @media(max-width:760px){
-  .panel{left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:calc(8px + env(safe-area-inset-bottom,0px));width:auto;max-height:62%;border-radius:22px;padding:12px 14px 14px;transform:translateY(calc(100% - 52px));transition:transform .35s cubic-bezier(.3,.7,.2,1),opacity .4s}
-  .panel.open{transform:none}
-  .toggle{display:flex;align-items:center;justify-content:space-between;width:100%;margin:-2px 0 10px;font-family:var(--display);text-transform:uppercase;font-size:15px;min-height:28px}
+  .panel{left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:calc(8px + env(safe-area-inset-bottom,0px));width:auto;height:52px;max-height:62%;border-radius:22px;padding:0 14px 14px;overflow:hidden;transition:height .35s cubic-bezier(.3,.7,.2,1),opacity .4s}
+  .panel.open{height:62%}
+  .toggle{display:flex;flex:none;align-items:center;justify-content:space-between;width:100%;height:52px;margin:0 0 4px;font-family:var(--display);text-transform:uppercase;font-size:15px}
   .toggle span{width:30px;height:30px;border-radius:50%;background:var(--do);color:#fff;display:grid;place-items:center;transition:transform .3s}
   .panel.open .toggle span{transform:rotate(180deg)}
   .panel h2{display:none}
@@ -125,16 +127,18 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--vang);outline-offse
 .dock{position:fixed;z-index:10;right:max(16px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none;transition:opacity .3s,right .35s cubic-bezier(.3,.7,.2,1)}
 .dock button{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;padding:9px 14px 8px 11px;border-radius:999px;background:var(--giay);color:var(--xanh);font-size:13px;font-weight:bold;box-shadow:0 6px 20px rgba(6,23,20,.35);white-space:nowrap;transition:transform .15s,background .15s}
 .dock button:hover{transform:translateX(-3px);background:#fff}
-.dock button svg{width:16px;height:16px;flex:none}
+.dock button svg{width:17px;height:17px;flex:none}
+.dock button small{display:none}
 .dock button.hot{background:var(--do);color:#fff}
 body.touring .dock,body.sheet-open .dock{opacity:0;pointer-events:none}
 @media(min-width:1180px){body.card-on .dock{right:calc(382px + env(safe-area-inset-right,0px))}}
 @media(max-width:1179px){body.card-on .dock{opacity:0;pointer-events:none}}
 @media(max-width:760px){
-  .dock{top:auto;transform:none;bottom:calc(176px + env(safe-area-inset-bottom,0px));right:max(8px,env(safe-area-inset-right,0px));gap:5px}
-  .dock button{width:42px;height:42px;padding:0;justify-content:center;border-radius:50%}
+  .dock{top:auto;transform:none;bottom:calc(120px + env(safe-area-inset-bottom,0px));right:max(8px,env(safe-area-inset-right,0px));gap:5px}
+  .dock button{width:50px;height:46px;padding:0;flex-direction:column;justify-content:center;gap:2px;border-radius:14px}
   .dock button span{display:none}
-  .dock button svg{width:18px;height:18px}
+  .dock button small{display:block;font-size:9px;font-weight:bold;letter-spacing:.02em;line-height:1}
+  .dock button svg{width:19px;height:19px}
   .panel.open~.dock{opacity:0;pointer-events:none}
 }
 .sheet.svc .in{border-top-color:var(--do);padding-top:20px}
@@ -197,7 +201,7 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
 
 .compass{position:fixed;z-index:9;right:max(16px,env(safe-area-inset-right,0px));top:calc(84px + env(safe-area-inset-top,0px));width:48px;height:48px;border-radius:50%;background:var(--panel);backdrop-filter:var(--glass);display:grid;place-items:center}
 .compass svg{width:30px;height:30px}
-@media(max-width:760px){.compass{top:auto;bottom:calc(66px + env(safe-area-inset-bottom,0px));right:max(8px,env(safe-area-inset-right,0px));width:42px;height:42px}}
+@media(max-width:760px){.compass{top:auto;bottom:calc(68px + env(safe-area-inset-bottom,0px));right:max(8px,env(safe-area-inset-right,0px));width:42px;height:42px}}
 .hint{position:fixed;z-index:9;left:50%;top:calc(84px + env(safe-area-inset-top,0px));transform:translateX(-50%);padding:9px 16px 7px;border-radius:999px;background:var(--panel);backdrop-filter:var(--glass);font-size:12.5px;color:rgba(246,231,201,.88);transition:opacity .6s;white-space:nowrap;pointer-events:none}
 @media(max-width:760px){.hint{top:calc(64px + env(safe-area-inset-top,0px));font-size:11.5px;padding:7px 12px 5px}}
 .loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--dem);transition:opacity .8s}
@@ -244,6 +248,7 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
 
 <aside class="panel" id="panel">
   <button class="toggle" id="ptoggle" type="button">Điểm đến · mùa lá · lớp <span>⌃</span></button>
+  <div class="pbody">
   <h2 class="d">Rừng phong hương<br>hồ Rào Quán</h2>
   <p class="sub">Rừng phong mọc ven và ngập nước quanh hồ thủy điện Rào Quán, xã Hướng Phùng. Muốn vào rừng phải đi thuyền từ bến ở Km 13 đường Hồ Chí Minh.</p>
   <div class="stats">
@@ -279,6 +284,7 @@ body.touring .card{opacity:0!important;pointer-events:none!important}
   </div>
   __BADGE__
   <p class="note">Sa bàn minh họa do Mùa Phong Khe Sanh dựng. Vị trí các điểm đã đối chiếu với Google Maps (10/2026). __DATANOTE__ Số liệu tham khảo: <a href="https://baolamdong.vn/khe-sanh-trai-nghiem-trekking-san-mua-la-phong-do-doc-dao-409725.html" target="_blank" rel="noopener">Báo Lâm Đồng</a>, <a href="https://nhandan.vn/mua-la-phong-huong-giua-dai-ngan-post931025.html" target="_blank" rel="noopener">Nhân Dân</a>, <a href="https://baovanhoa.vn/du-lich/man-nhan-voi-mua-phong-huong-trut-la-185569.html" target="_blank" rel="noopener">Báo Văn hóa</a>. Không dùng để dẫn đường.</p>
+  </div>
 </aside>
 
 <div class="card" id="card">
@@ -939,7 +945,7 @@ renderer.domElement.addEventListener('pointerdown',()=>{ if(!touring) fly=null; 
 function fit(){const w=innerWidth,h=innerHeight;camera.aspect=w/h;
   if(w>=760) camera.setViewOffset(w,h,-Math.min(190,w*.13),0,w,h); else camera.setViewOffset(w,h,0,Math.round(h*.08),w,h);
   camera.updateProjectionMatrix();renderer.setSize(w,h);LABELS.forEach(o=>o.sz=null);}
-addEventListener('resize',fit); fit();
+addEventListener('resize',fit); if(window.visualViewport) visualViewport.addEventListener('resize',fit); fit();
 
 function countUp(){ document.querySelectorAll('[data-count]').forEach(el=>{const to=+el.dataset.count; const s=performance.now();
   const f=()=>{const t=Math.min(1,(performance.now()-s)/1800), e=1-Math.pow(1-t,4); el.textContent=Math.round(to*e).toLocaleString('vi-VN'); if(t<1) requestAnimationFrame(f);}; f();}); }
@@ -953,15 +959,17 @@ const hideBig=()=>bigNum.classList.remove('on');
 // Lần gửi đầu tiên FormSubmit gửi email kích hoạt tới hộp thư; sau khi bấm xác nhận, mọi yêu cầu sẽ về email (và thông báo trên điện thoại).
 // Có thể thay bằng chuỗi ẩn danh FormSubmit cấp sau khi kích hoạt, hoặc thêm Telegram: NOTIFY.telegram={token:'...',chat:'...'}.
 const NOTIFY={endpoint:'https://formsubmit.co/ajax/dd637a1b9e44491b5da94360143241d7', telegram:null};
+// Biểu tượng tối giản, nét 1.7, cùng một lưới 20×20
 const ICO={
-  tour:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 5.5 9 9l-3.5 1.5L7 7z" fill="currentColor"/></svg>',
-  boat:'<svg viewBox="0 0 16 16"><path d="M2 10h12l-2 3H4z" fill="currentColor"/><path d="M8 2v8M8 2l4 6H8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
-  guide:'<svg viewBox="0 0 16 16"><circle cx="8" cy="4.5" r="2.6" fill="currentColor"/><path d="M2.5 14a5.5 5.5 0 0 1 11 0z" fill="currentColor"/></svg>',
-  photo:'<svg viewBox="0 0 16 16"><path d="M2 5h3l1-1.6h4L11 5h3v8H2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="8.8" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
-  car:'<svg viewBox="0 0 16 16"><path d="M2.5 9 4 5h8l1.5 4v3.5h-11z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5" cy="11" r="1.2" fill="currentColor"/><circle cx="11" cy="11" r="1.2" fill="currentColor"/></svg>',
-  stay:'<svg viewBox="0 0 16 16"><path d="M2 8 8 2.5 14 8M3.5 7v6.5h9V7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
-  contact:'<svg viewBox="0 0 16 16"><path d="M3 2h3l1.5 3.5L6 7a8 8 0 0 0 3 3l1.5-1.5L14 10v3a1 1 0 0 1-1 1A11 11 0 0 1 2 3a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'
+  tour:'<svg viewBox="0 0 20 20"><path d="M5 18V3M5 3h10l-2.5 3.5L15 10H5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+  boat:'<svg viewBox="0 0 20 20"><path d="M3 13h14l-2.5 4h-9zM10 3v10M10 3l5 7H10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+  guide:'<svg viewBox="0 0 20 20"><circle cx="10" cy="6" r="3.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 17.5a6.5 6.5 0 0 1 13 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+  photo:'<svg viewBox="0 0 20 20"><path d="M3 6.5h3l1.5-2h5l1.5 2h3v10H3z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="10" cy="11" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>',
+  car:'<svg viewBox="0 0 20 20"><path d="M3 11l2-5h10l2 5v5H3z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 11h14" stroke="currentColor" stroke-width="1.7"/><circle cx="6.5" cy="13.5" r="1.1" fill="currentColor"/><circle cx="13.5" cy="13.5" r="1.1" fill="currentColor"/></svg>',
+  stay:'<svg viewBox="0 0 20 20"><path d="M3 16V8M3 12h14v4M3 12V9.5h7V12M17 16v-4a2 2 0 0 0-2-2h-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="6" cy="9" r="1.3" fill="currentColor"/></svg>',
+  contact:'<svg viewBox="0 0 20 20"><path d="M3 4h14v9H8l-4 3.5V13H3z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M6.5 7.5h7M6.5 10h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>'
 };
+const SHORT={tour:'Tour',boat:'Thuyền',guide:'HDV',photo:'Ảnh',car:'Xe',stay:'Nghỉ',contact:'Nhắn'};
 const SERVICES=[
   {id:'tour', label:'Đặt tour', hot:true, h:'Tour rừng phong hương', p:'Tour 1 ngày hoặc 2 ngày 1 đêm từ Khe Sanh: thuyền ra rừng phong ngập nước, săn mây Cu Vơ, cà phê đồi và di tích Tà Cơn. Đẹp nhất giữa tháng 12 đến đầu tháng 1.',
    inc:['Thuyền máy có người lái, áo phao cho cả đoàn','Hướng dẫn viên bản địa Vân Kiều – Pa Kô','Ăn trưa đặc sản, nước uống, bảo hiểm du lịch','Tùy chọn: xe đưa đón Đông Hà, Huế, Đà Nẵng']},
@@ -980,7 +988,7 @@ const SERVICES=[
 ];
 const dock=document.getElementById('dock'), svc=document.getElementById('svc'), svcForm=document.getElementById('svcForm');
 let curSvc=null;
-SERVICES.forEach(s=>{const b=document.createElement('button');b.type='button';b.className=s.hot?'hot':'';b.title=s.label;b.setAttribute('aria-label',s.label);b.innerHTML=ICO[s.id]+'<span>'+s.label+'</span>';b.onclick=()=>openSvc(s);dock.appendChild(b);});
+SERVICES.forEach(s=>{const b=document.createElement('button');b.type='button';b.className=s.hot?'hot':'';b.title=s.label;b.setAttribute('aria-label',s.label);b.innerHTML=ICO[s.id]+'<span>'+s.label+'</span><small>'+SHORT[s.id]+'</small>';b.onclick=()=>openSvc(s);dock.appendChild(b);});
 function openSvc(s){ curSvc=s; document.getElementById('svcH').textContent=s.h; document.getElementById('svcP').textContent=s.p;
   document.getElementById('svcInc').innerHTML=s.inc.map(x=>`<li>${x}</li>`).join(''); document.getElementById('svcEb').textContent='Dịch vụ · '+s.label;
   svc.classList.add('show'); document.body.classList.add('sheet-open'); if(MOBILE) document.getElementById('panel').classList.remove('open'); }
