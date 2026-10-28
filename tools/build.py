@@ -11,10 +11,7 @@ pts = json.load(open(f'{T}/data/points.json'))
 geo = {k: g.get(k, []) for k in ['lake', 'lakeLevel', 'roads', 'rivers', 'waters', 'wind', 'places']}
 geo.update({k: pts[k] for k in ['boat', 'phong', 'ben', 'dam']})
 placeholder = d.get('source') == 'placeholder' or g.get('placeholder')
-leaf = ('<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4 C23 10 25 12 31 11 C29 16 30 19 36 22 C29 24 26 25 25 29 '
-        'L21 27 L21 37 L19 37 L19 27 L15 29 C14 25 11 24 4 22 C10 19 11 16 9 11 C15 12 17 10 20 4Z" fill="#C44125" '
-        'stroke="#FBF4E3" stroke-width="1.6" stroke-linejoin="round"/><path d="M20 27 L20 9 M20 25 L11 15 M20 25 L29 15" '
-        'stroke="#FBF4E3" stroke-width="1.1" fill="none" opacity=".75"/></svg>')
+leaf = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2 C 18.4 7.6 16.6 10.4 12.6 12 C 9.4 13.3 5.6 12.4 2 14.6 C 6.2 16.8 9 19.4 10 22.8 C 10.8 25.4 10 28.2 7.6 31 C 11.6 29.4 15.4 28.6 18.6 29.4 L 18.6 36.5 L 20 36.5 L 21.4 36.5 L 21.4 29.4 C 24.6 28.6 28.4 29.4 32.4 31 C 30 28.2 29.2 25.4 30 22.8 C 31 19.4 33.8 16.8 38 14.6 C 34.4 12.4 30.6 13.3 27.4 12 C 23.4 10.4 21.6 7.6 20 2 Z" fill="#C44125"/></svg>'
 t = (t.replace('__FONTS__', open(f'{T}/data/fonts.css').read())
       .replace('__DEM__', json.dumps(dem, separators=(',', ':')))
       .replace('__GEO__', json.dumps(geo, separators=(',', ':')))
